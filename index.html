@@ -4,17 +4,15 @@
 <head>
 <meta charset="UTF-8">
 <title>練習踩地雷</title>
-
+<script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
 <script>
-	function myFunction() {
-		document.getElementById("demo").innerHTML = "My First JavaScript Function";
-	}
+	
 </script>
 </head>
 
 <body>
 	<p id="demo">@__@</p>
-	<button type="button" onclick="myFunction()">試試看</button>
+	<button type="button" onclick="myFunction()">{{carname}}</button>
+	<script type="text/javascript" th:src="@{/scripts/btc604w.js}"></script>
 </body>
-
 </html>
