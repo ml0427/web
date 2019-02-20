@@ -5,14 +5,16 @@
 <meta charset="UTF-8">
 <title>練習踩地雷</title>
 <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+<script type="text/javascript" src="index.js">
+	
+</script>
 <script>
 	
 </script>
 </head>
 
-<body>
+<body data-ng-app="myApp" data-ng-controller="controller">
 	<p id="demo">@__@</p>
-	<button type="button">{{ carname }}</button>
-	<script type="text/javascript" th:src="@{/scripts/btc604w.js}"></script>
+	<button type="button" data-ng-click="test()">{{ carName }}</button>
 </body>
 </html>
