@@ -5,16 +5,33 @@
 <meta charset="UTF-8">
 <title>練習踩地雷</title>
 <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
-<script type="text/javascript" src="index.js">
-	
-</script>
-<script>
-	
-</script>
+<script type="text/javascript" src="index.js"></script>
+<style>
+.button_style {
+	width: 40px;
+	height: 40px;
+}
+</style>
 </head>
 
 <body data-ng-app="myApp" data-ng-controller="controller">
-	<p id="demo">@__@</p>
-	<button type="button" data-ng-click="test()">{{ carName }}</button>
+	<div>
+		<samp>X軸數量</samp>
+		<input id="x" data-ng-model="test.x" type="text" value="{{test.x}}" title="x">
+	</div>
+	<div>
+		<samp>Y軸數量</samp>
+		<input id="y" data-ng-model="test.y" type="text" value="{{test.y}}" title="y">
+	</div>
+	<div>
+		<samp>炸彈數量</samp>
+		<input id="bombNb" data-ng-model="test.bombAllNb" type="text" value="{{test.bombAllNb}}" title="y">
+	</div>
+
+	<div data-ng-repeat="row in arrayLsLs track by $index">
+		<button class="button_style" type="button" data-ng-click="test($parent.$index ,$index)" data-ng-repeat="cell in row track by $index">
+			<samp>{{cell.count}}</samp>
+		</button>
+	</div>
 </body>
 </html>
