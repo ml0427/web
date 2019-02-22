@@ -17,25 +17,38 @@ app.directive('ngRightClick', function($parse) {
 app.controller('controller', function($scope) {
 	var x, y, arrayLsLs;
 
-	$scope.$watchGroup([ 'userIn.x', 'userIn.y', 'userIn.bombAllNb' ], function(newValue, oldValue, scope) {
-		var x = newValue[0];
-		var y = newValue[1];
-		var bombAllNb = newValue[2];
-		// console.log(x, y);
+	$scope.gameStart = function(x, y, bombAllNb) {
+		console.log(x, y, bombAllNb);
 
 		$scope.arrayLsLs = [];
+		// 製造地圖
+		$scope.createMap(x, y);
+		// 製作炸彈
+		$scope.randomBombsMap(x, y, bombAllNb);
+		// 計算炸彈數量
+		$scope.countNumberOfBombs(x, y);
 
-		if (x && y) {
-			// 製造地圖
-			$scope.createMap(x, y);
-			if (bombAllNb) {
-				// 製作炸彈
-				$scope.randomBombsMap(x, y, bombAllNb);
-				// 計算炸彈數量
-				$scope.countNumberOfBombs(x, y);
-			}
-		}
-	});
+	}
+
+	// $scope.$watchGroup([ 'userIn.x', 'userIn.y', 'userIn.bombAllNb' ],
+	// function(newValue, oldValue, scope) {
+	// var x = newValue[0];
+	// var y = newValue[1];
+	// var bombAllNb = newValue[2];
+	//
+	// $scope.arrayLsLs = [];
+	//
+	// if (x && y) {
+	// // 製造地圖
+	// $scope.createMap(x, y);
+	// if (bombAllNb) {
+	// // 製作炸彈
+	// $scope.randomBombsMap(x, y, bombAllNb);
+	// // 計算炸彈數量
+	// $scope.countNumberOfBombs(x, y);
+	// }
+	// }
+	// });
 
 	// 製造地圖
 	$scope.createMap = function(x, y) {
@@ -153,12 +166,12 @@ app.controller('controller', function($scope) {
 	$scope.statusCheck = function(x, y) {
 
 		var isChecking = false;
-		var goodGame = true;
+		$scope.goodGame = true;
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
 				// 如果狀態未開，而且裡面不是炸彈的話
 				if ($scope.arrayLsLs[i][j].open == false && $scope.arrayLsLs[i][j].Bomb == false) {
-					goodGame = false;
+					$scope.goodGame = false;
 				}
 				// 找到使用者輸入的位置
 				if ($scope.arrayLsLs[i][j].open == true && $scope.arrayLsLs[i][j].bombNb == 0) {
@@ -243,9 +256,17 @@ app.controller('controller', function($scope) {
 	$scope.leftClick = function(x, y) {
 		if ($scope.arrayLsLs[x][y].banner == false) {
 			$scope.arrayLsLs[x][y].open = true;
-			// 檢查地圖(開圖)
-			$scope.statusCheck(x, y);
+			if ($scope.arrayLsLs[x][y].Bomb == false) {
+				// 檢查地圖(開圖)
+				$scope.statusCheck(x, y);
+				if ($scope.goodGame) {
+					alert("賽道的拉");
+				}
+			} else {
+				alert("you are die");
+			}
 		}
 		console.log("按了左鍵", "位置", x, y);
 	}
+
 });

@@ -27,7 +27,7 @@
 		<samp>炸彈數量</samp>
 		<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
 	</div>
-
+	<button type="button" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb)">開始</button>
 	<div data-ng-repeat="row in arrayLsLs track by $index">
 		<button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)" data-ng-repeat="cell in row track by $index">
 			<samp data-ng-if="cell.open == true && cell.banner == false">{{cell.bombNb}}</samp>
