@@ -17,20 +17,22 @@
 <body data-ng-app="myApp" data-ng-controller="controller">
 	<div>
 		<samp>X軸數量</samp>
-		<input id="x" data-ng-model="test.x" type="text" value="{{test.x}}" title="x">
+		<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
 	</div>
 	<div>
 		<samp>Y軸數量</samp>
-		<input id="y" data-ng-model="test.y" type="text" value="{{test.y}}" title="y">
+		<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
 	</div>
 	<div>
 		<samp>炸彈數量</samp>
-		<input id="bombNb" data-ng-model="test.bombAllNb" type="text" value="{{test.bombAllNb}}" title="y">
+		<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
 	</div>
 
 	<div data-ng-repeat="row in arrayLsLs track by $index">
-		<button class="button_style" type="button" data-ng-click="test($parent.$index ,$index)" data-ng-repeat="cell in row track by $index">
-			<samp>{{cell.bombNb}}</samp>
+		<button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)" data-ng-repeat="cell in row track by $index">
+			<samp data-ng-if="cell.open == true && cell.banner == false">{{cell.bombNb}}</samp>
+			<samp data-ng-if="cell.open == false && cell.banner == false">&nbsp;</samp>
+			<samp data-ng-if="cell.open == false && cell.banner == true">&</samp>
 		</button>
 	</div>
 </body>
