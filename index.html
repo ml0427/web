@@ -10,6 +10,20 @@
 .button_style {
 	width: 40px;
 	height: 40px;
+	margin-bottom: 0;
+	padding: 0;
+}
+
+.button_div {
+	height: 36px;
+}
+
+.button_div_open {
+	background: white;
+}
+
+.button_div_banner {
+	background: green;
 }
 </style>
 </head>
@@ -27,12 +41,17 @@
 		<samp>炸彈數量</samp>
 		<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
 	</div>
-	<button type="button" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb)">開始</button>
+	<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb)">開始</button>
 	<div data-ng-repeat="row in arrayLsLs track by $index">
 		<button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)" data-ng-repeat="cell in row track by $index">
-			<samp data-ng-if="cell.open == true && cell.banner == false">{{cell.bombNb}}</samp>
-			<samp data-ng-if="cell.open == false && cell.banner == false">&nbsp;</samp>
-			<samp data-ng-if="cell.open == false && cell.banner == true">&</samp>
+			<!-- 按下按鈕 && 沒有插旗 && 炸彈計算數不為0 -->
+			<div class="button_div button_div_open" data-ng-if="cell.open == true && cell.banner == false && cell.bombNb != 0">{{cell.bombNb}}</div>
+			<!-- 按下按鈕 && 沒有插旗 && 炸彈計算數為0 -->
+			<div class="button_div button_div_open" class="button_div" data-ng-if="cell.open == true && cell.banner == false && cell.bombNb == 0">&nbsp;</div>
+			<!-- 未按下按鈕 && 沒有插旗-->
+			<div class="button_div" data-ng-if="cell.open == false && cell.banner == false">&nbsp;</div>
+			<!-- 未按下按鈕 && 有插旗 -->
+			<div class="button_div button_div_banner" data-ng-if="cell.open == false && cell.banner == true">&nbsp;</div>
 		</button>
 	</div>
 </body>

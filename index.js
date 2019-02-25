@@ -30,26 +30,6 @@ app.controller('controller', function($scope) {
 
 	}
 
-	// $scope.$watchGroup([ 'userIn.x', 'userIn.y', 'userIn.bombAllNb' ],
-	// function(newValue, oldValue, scope) {
-	// var x = newValue[0];
-	// var y = newValue[1];
-	// var bombAllNb = newValue[2];
-	//
-	// $scope.arrayLsLs = [];
-	//
-	// if (x && y) {
-	// // 製造地圖
-	// $scope.createMap(x, y);
-	// if (bombAllNb) {
-	// // 製作炸彈
-	// $scope.randomBombsMap(x, y, bombAllNb);
-	// // 計算炸彈數量
-	// $scope.countNumberOfBombs(x, y);
-	// }
-	// }
-	// });
-
 	// 製造地圖
 	$scope.createMap = function(x, y) {
 
@@ -69,7 +49,7 @@ app.controller('controller', function($scope) {
 		}
 		console.log("製造地圖結束");
 	}
-
+	
 	// 製作炸彈地圖
 	$scope.randomBombsMap = function(x, y, bombAllNb) {
 
@@ -165,6 +145,7 @@ app.controller('controller', function($scope) {
 	// 檢查地圖
 	$scope.statusCheck = function(x, y) {
 
+		console.log("檢查地圖");
 		var isChecking = false;
 		$scope.goodGame = true;
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
@@ -244,6 +225,8 @@ app.controller('controller', function($scope) {
 		}
 		if (isChecking)
 			$scope.statusCheck(x, y);
+
+		console.log("檢查地圖結束");
 	}
 
 	$scope.rightClick = function(x, y) {
