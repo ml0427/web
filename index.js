@@ -26,6 +26,8 @@
 
 			// 計時
 			$timeout($scope.countTime, 1000);
+			// 計算炸彈剩餘數量
+			$scope.countRemainBombNb();
 			// 製造地圖
 			$scope.createMap(x, y);
 			// 製作炸彈
@@ -247,8 +249,23 @@
 			console.log("檢查地圖結束");
 		}
 
+		// 計算炸彈剩餘數量
+		$scope.countRemainBombNb = function(banner) {
+			if (!$scope.remainBombNb) {
+				$scope.remainBombNb = $scope.userIn.bombAllNb;
+			} else {
+				if (!banner) {
+					$scope.remainBombNb--;
+				} else {
+					$scope.remainBombNb++;
+				}
+			}
+			console.log("計算炸彈剩餘數量", $scope.userIn.bombAllNb);
+		}
+
 		$scope.rightClick = function(x, y) {
-			if ($scope.arrayLsLs[x][y].open == false) {
+			$scope.countRemainBombNb($scope.arrayLsLs[x][y].banner);
+			if (!$scope.arrayLsLs[x][y].open) {
 				$scope.arrayLsLs[x][y].banner = !$scope.arrayLsLs[x][y].banner;
 			}
 			console.log("按了右鍵", "位置", x, y);
