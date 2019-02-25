@@ -49,7 +49,7 @@ app.controller('controller', function($scope) {
 		}
 		console.log("製造地圖結束");
 	}
-	
+
 	// 製作炸彈地圖
 	$scope.randomBombsMap = function(x, y, bombAllNb) {
 
@@ -246,6 +246,11 @@ app.controller('controller', function($scope) {
 					alert("賽道的拉");
 				}
 			} else {
+				for (var i = 0; i < $scope.arrayLsLs.length; i++) {
+					for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
+						$scope.arrayLsLs[i][j].open = true;
+					}
+				}
 				alert("you are die");
 			}
 		}
