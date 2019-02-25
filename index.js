@@ -61,7 +61,7 @@
 						bombNb : 0,
 						open : false,
 						banner : false,
-						Bomb : false
+						isbomb : false
 					};
 				}
 			}
@@ -78,10 +78,10 @@
 				for (var i = 0; i < bombAllNb; i++) {
 					var randomX = Math.floor(Math.random() * x);
 					var randomY = Math.floor(Math.random() * y);
-					if ($scope.arrayLsLs[randomX][randomY].Bomb == true) {
+					if ($scope.arrayLsLs[randomX][randomY].isbomb == true) {
 						i--;
 					} else {
-						$scope.arrayLsLs[randomX][randomY].Bomb = true;
+						$scope.arrayLsLs[randomX][randomY].isbomb = true;
 						$scope.arrayLsLs[randomX][randomY].bombNb = "x";
 					}
 				}
@@ -97,59 +97,59 @@
 			for (var i = 0; i < x; i++) {
 				for (var j = 0; j < y; j++) {
 					// 找到*的位置
-					if ($scope.arrayLsLs[i][j].Bomb == true) {
+					if ($scope.arrayLsLs[i][j].isbomb == true) {
 						// 如果不是在最上邊
 						if (i != 0) {
-							if ($scope.arrayLsLs[i - 1][j].Bomb == false) {
+							if ($scope.arrayLsLs[i - 1][j].isbomb == false) {
 								// 上+1
 								$scope.arrayLsLs[i - 1][j].bombNb = $scope.arrayLsLs[i - 1][j].bombNb + 1;
 							}
 						}
 						// 如果不是在最下邊
 						if (i != $scope.arrayLsLs.length - 1) {
-							if ($scope.arrayLsLs[i + 1][j].Bomb == false) {
+							if ($scope.arrayLsLs[i + 1][j].isbomb == false) {
 								// 下+1
 								$scope.arrayLsLs[i + 1][j].bombNb = $scope.arrayLsLs[i + 1][j].bombNb + 1;
 							}
 						}
 						// 如果不是在最右邊
 						if (j != $scope.arrayLsLs[i].length - 1) {
-							if ($scope.arrayLsLs[i][j + 1].Bomb == false) {
+							if ($scope.arrayLsLs[i][j + 1].isbomb == false) {
 								// 右+1
 								$scope.arrayLsLs[i][j + 1].bombNb = $scope.arrayLsLs[i][j + 1].bombNb + 1;
 							}
 						}
 						// 如果不是在最左邊
 						if (j != 0) {
-							if ($scope.arrayLsLs[i][j - 1].Bomb == false) {
+							if ($scope.arrayLsLs[i][j - 1].isbomb == false) {
 								// 左+1
 								$scope.arrayLsLs[i][j - 1].bombNb = $scope.arrayLsLs[i][j - 1].bombNb + 1;
 							}
 						}
 						// 如果不是在最右下
 						if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1) {
-							if ($scope.arrayLsLs[i + 1][j + 1].Bomb == false) {
+							if ($scope.arrayLsLs[i + 1][j + 1].isbomb == false) {
 								// 右下+1
 								$scope.arrayLsLs[i + 1][j + 1].bombNb = $scope.arrayLsLs[i + 1][j + 1].bombNb + 1;
 							}
 						}
 						// 如果不是在最左下
 						if (i != $scope.arrayLsLs.length - 1 && j != 0) {
-							if ($scope.arrayLsLs[i + 1][j - 1].Bomb == false) {
+							if ($scope.arrayLsLs[i + 1][j - 1].isbomb == false) {
 								// 左下+1
 								$scope.arrayLsLs[i + 1][j - 1].bombNb = $scope.arrayLsLs[i + 1][j - 1].bombNb + 1;
 							}
 						}
 						// 如果不是在最右上
 						if (i != 0 && j != $scope.arrayLsLs[i].length - 1) {
-							if ($scope.arrayLsLs[i - 1][j + 1].Bomb == false) {
+							if ($scope.arrayLsLs[i - 1][j + 1].isbomb == false) {
 								// 右上+1
 								$scope.arrayLsLs[i - 1][j + 1].bombNb = $scope.arrayLsLs[i - 1][j + 1].bombNb + 1;
 							}
 						}
 						// 如果不是在最左上
 						if (i != 0 && j != 0) {
-							if ($scope.arrayLsLs[i - 1][j - 1].Bomb == false) {
+							if ($scope.arrayLsLs[i - 1][j - 1].isbomb == false) {
 								// 左上+1
 								$scope.arrayLsLs[i - 1][j - 1].bombNb = $scope.arrayLsLs[i - 1][j - 1].bombNb + 1;
 							}
@@ -169,7 +169,7 @@
 			for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 				for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
 					// 如果狀態未開，而且裡面不是炸彈的話
-					if ($scope.arrayLsLs[i][j].open == false && $scope.arrayLsLs[i][j].Bomb == false) {
+					if ($scope.arrayLsLs[i][j].open == false && $scope.arrayLsLs[i][j].isbomb == false) {
 						$scope.goodGame = false;
 					}
 					// 找到使用者輸入的位置
@@ -177,14 +177,14 @@
 
 						// 如果不是在最上邊
 						if (i != 0) {
-							if ($scope.arrayLsLs[i - 1][j].Bomb == false && $scope.arrayLsLs[i - 1][j].open == false) {
+							if ($scope.arrayLsLs[i - 1][j].isbomb == false && $scope.arrayLsLs[i - 1][j].open == false) {
 								$scope.arrayLsLs[i - 1][j].open = true;
 								isChecking = true;
 							}
 						}
 						// 如果不是在最下邊
 						if (i != $scope.arrayLsLs.length - 1) {
-							if ($scope.arrayLsLs[i + 1][j].Bomb == false && $scope.arrayLsLs[i + 1][j].open == false) {
+							if ($scope.arrayLsLs[i + 1][j].isbomb == false && $scope.arrayLsLs[i + 1][j].open == false) {
 								// 下+1
 								$scope.arrayLsLs[i + 1][j].open = true;
 								isChecking = true;
@@ -192,7 +192,7 @@
 						}
 						// 如果不是在最右邊
 						if (j != $scope.arrayLsLs.length - 1) {
-							if ($scope.arrayLsLs[i][j + 1].Bomb == false && $scope.arrayLsLs[i][j + 1].open == false) {
+							if ($scope.arrayLsLs[i][j + 1].isbomb == false && $scope.arrayLsLs[i][j + 1].open == false) {
 								// 右+1
 								$scope.arrayLsLs[i][j + 1].open = true;
 								isChecking = true;
@@ -200,7 +200,7 @@
 						}
 						// 如果不是在最左邊
 						if (j != 0) {
-							if ($scope.arrayLsLs[i][j - 1].Bomb == false && $scope.arrayLsLs[i][j - 1].open == false) {
+							if ($scope.arrayLsLs[i][j - 1].isbomb == false && $scope.arrayLsLs[i][j - 1].open == false) {
 								// 左+1
 								$scope.arrayLsLs[i][j - 1].open = true;
 								isChecking = true;
@@ -208,7 +208,7 @@
 						}
 						// 如果不是在最右下
 						if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1) {
-							if ($scope.arrayLsLs[i + 1][j + 1].Bomb == false && $scope.arrayLsLs[i + 1][j + 1].open == false) {
+							if ($scope.arrayLsLs[i + 1][j + 1].isbomb == false && $scope.arrayLsLs[i + 1][j + 1].open == false) {
 								// 右下+1
 								$scope.arrayLsLs[i + 1][j + 1].open = true;
 								isChecking = true;
@@ -216,7 +216,7 @@
 						}
 						// 如果不是在最左下
 						if (i != $scope.arrayLsLs.length - 1 && j != 0) {
-							if ($scope.arrayLsLs[i + 1][j - 1].Bomb == false && $scope.arrayLsLs[i + 1][j - 1].open == false) {
+							if ($scope.arrayLsLs[i + 1][j - 1].isbomb == false && $scope.arrayLsLs[i + 1][j - 1].open == false) {
 								// 左下+1
 								$scope.arrayLsLs[i + 1][j - 1].open = true;
 								isChecking = true;
@@ -224,7 +224,7 @@
 						}
 						// 如果不是在最右上
 						if (i != 0 && j != $scope.arrayLsLs[i].length - 1) {
-							if ($scope.arrayLsLs[i - 1][j + 1].Bomb == false && $scope.arrayLsLs[i - 1][j + 1].open == false) {
+							if ($scope.arrayLsLs[i - 1][j + 1].isbomb == false && $scope.arrayLsLs[i - 1][j + 1].open == false) {
 								// 右上+1
 								$scope.arrayLsLs[i - 1][j + 1].open = true;
 								isChecking = true;
@@ -232,7 +232,7 @@
 						}
 						// 如果不是在最左上
 						if (i != 0 && j != 0) {
-							if ($scope.arrayLsLs[i - 1][j - 1].Bomb == false && $scope.arrayLsLs[i - 1][j - 1].open == false) {
+							if ($scope.arrayLsLs[i - 1][j - 1].isbomb == false && $scope.arrayLsLs[i - 1][j - 1].open == false) {
 								// 左上+1
 								$scope.arrayLsLs[i - 1][j - 1].open = true;
 								isChecking = true;
@@ -257,7 +257,7 @@
 		$scope.leftClick = function(x, y) {
 			if ($scope.arrayLsLs[x][y].banner == false) {
 				$scope.arrayLsLs[x][y].open = true;
-				if ($scope.arrayLsLs[x][y].Bomb == false) {
+				if ($scope.arrayLsLs[x][y].isbomb == false) {
 					// 檢查地圖(開圖)
 					$scope.statusCheck(x, y);
 					if ($scope.goodGame) {
