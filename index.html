@@ -88,10 +88,10 @@
 		<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)">開始</button>
 	</div>
 	<div class="sidebar_right">
-		<table>
+		<table data-ng-right-click="">
 			<tr data-ng-repeat="row in arrayLsLs track by $index">
 				<td data-ng-repeat="cell in row track by $index">
-					<button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index,remainBombNb)" data-ng-click="leftClick($parent.$index ,$index)">
+					<button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">
 						<!-- 按下按鈕 && 炸彈計算數不為0 ===> 判斷是否為炸彈 -->
 						<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
 						<!-- 按下按鈕 && 炸彈計算數為0 -->
