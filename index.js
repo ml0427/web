@@ -17,37 +17,75 @@
 	});
 
 	app.controller('controller', function($scope, $timeout) {
-		var x, y, arrayLsLs, timeSwith, myCountTime;
+		var myCountTime;
+		$scope.gameStart = function(x, y, bombAllNb, chooseDifficulty) {
+			// console.log(x, y, bombAllNb);
 
-		$scope.gameStart = function(x, y, bombAllNb) {
-			console.log(x, y, bombAllNb);
-
-			// 資料初始化
-			$scope.arrayLsLs = [];
-			$scope.remainBombNb = null;
-			$scope.gameTime = 0;
+			// 時間清除
 			$timeout.cancel(myCountTime);
+			// 地圖初始化
+			$scope.arrayLsLs = [];
+			// 參數初始化
+			$scope.parameter = {
+				gameTime : 0,
+				bombAllNb : bombAllNb,
+				remainBombNb : bombAllNb,
+				x : x,
+				y : y
+			}
 
+			// 難度設定
+			$scope.difficulty($scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb, chooseDifficulty);
 			// 計時
 			myCountTime = $timeout($scope.countTime, 1000);
-			// 計算炸彈剩餘數量
-			$scope.countRemainBombNb();
 			// 製造地圖
-			$scope.createMap(x, y);
+			$scope.createMap($scope.parameter.x, $scope.parameter.y);
 			// 製作炸彈
-			$scope.randomBombsMap(x, y, bombAllNb);
+			$scope.randomBombsMap($scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb);
 			// 計算炸彈數量
-			$scope.countNumberOfBombs(x, y);
+			$scope.countNumberOfBombs($scope.parameter.x, $scope.parameter.y);
 
 		}
 
-		$scope.countTime = function() {
-			if (!$scope.gameTime) {
-				$scope.gameTime = 0;
+		// 難度
+		$scope.difficulty = function(x, y, bombAllNb, chooseDifficulty) {
+
+			// 初級：9 × 9，10顆地雷（Windows 2000或以後）
+			// 中級：16 × 16，40顆地雷
+			// 高級：30 × 16，99顆地雷
+			console.log("難度選擇", chooseDifficulty);
+			if (chooseDifficulty == 1) {
+				$scope.parameter.x = 16;
+				$scope.parameter.y = 30;
+				$scope.parameter.bombAllNb = 99;
+				$scope.parameter.remainBombNb = 99;
 			}
-			$scope.gameTime++;
+			if (chooseDifficulty == 2) {
+				$scope.parameter.x = 16;
+				$scope.parameter.y = 16;
+				$scope.parameter.bombAllNb = 40;
+				$scope.parameter.remainBombNb = 40;
+			}
+			if (chooseDifficulty == 3) {
+				$scope.parameter.x = 9;
+				$scope.parameter.y = 9;
+				$scope.parameter.bombAllNb = 10;
+				$scope.parameter.remainBombNb = 10;
+			}
+			if (chooseDifficulty == 4) {
+				$scope.parameter.x = x;
+				$scope.parameter.y = y;
+				$scope.parameter.bombAllNb = bombAllNb;
+				$scope.parameter.remainBombNb = bombAllNb;
+			}
+			console.log("難度選擇結束", x, y, bombAllNb);
+		}
+
+		// 計時器
+		$scope.countTime = function() {
+			$scope.parameter.gameTime++;
 			myCountTime = $timeout($scope.countTime, 1000);
-			console.log($scope.gameTime + "秒");
+			console.log($scope.parameter.gameTime + "秒");
 		};
 
 		// 製造地圖
@@ -193,7 +231,7 @@
 							}
 						}
 						// 如果不是在最右邊
-						if (j != $scope.arrayLsLs.length - 1) {
+						if (j != $scope.arrayLsLs[i].length - 1) {
 							if (!$scope.arrayLsLs[i][j + 1].isbomb && !$scope.arrayLsLs[i][j + 1].open) {
 								// 右+1
 								$scope.arrayLsLs[i][j + 1].open = true;
@@ -250,21 +288,19 @@
 		}
 
 		// 計算炸彈剩餘數量
-		$scope.countRemainBombNb = function(banner) {
-			if (!$scope.remainBombNb) {
-				$scope.remainBombNb = $scope.userIn.bombAllNb;
-			} else {
-				if (!banner) {
-					$scope.remainBombNb--;
+		$scope.countRemainBombNb = function(x, y) {
+			if (!$scope.arrayLsLs[x][y].open) {
+				if (!$scope.arrayLsLs[x][y].banner) {
+					$scope.parameter.remainBombNb--;
 				} else {
-					$scope.remainBombNb++;
+					$scope.parameter.remainBombNb++;
 				}
+				console.log("計算炸彈剩餘數量", $scope.remainBombNb);
 			}
-			console.log("計算炸彈剩餘數量", $scope.userIn.bombAllNb);
 		}
 
 		$scope.rightClick = function(x, y) {
-			$scope.countRemainBombNb($scope.arrayLsLs[x][y].banner);
+			$scope.countRemainBombNb(x, y);
 			if (!$scope.arrayLsLs[x][y].open) {
 				$scope.arrayLsLs[x][y].banner = !$scope.arrayLsLs[x][y].banner;
 			}
@@ -279,7 +315,7 @@
 					$scope.statusCheck(x, y);
 					if ($scope.goodGame) {
 						$timeout.cancel(myCountTime);
-						alert("賽道的拉");
+						alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
 					}
 				} else {
 					for (var i = 0; i < $scope.arrayLsLs.length; i++) {

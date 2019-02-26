@@ -8,66 +8,100 @@
 <script type="text/javascript" src="index.js"></script>
 <style>
 .button_style {
-	width: 30px;
-	height: 30px;
+	width: 20px;
+	height: 20px;
 	margin-bottom: 0;
 	padding: 0;
 }
 
 .button_div {
-	height: 26px;
+	background-color: silver;
+	height: 16px;
 }
 
 .button_div_open {
-	height: 26px;
+	height: 16px;
 	background: white;
 }
 
 .button_div_banner {
-	height: 26px;
+	height: 16px;
 	background: green;
 }
 
 .button_div_bomb {
-	height: 26px;
+	height: 16px;
 	background: red;
+}
+
+.table_center {
+	margin: auto;
+}
+
+.sidebar_left {
+	background-color: silver;
+	width: 300px;
+	float: left;
+}
+
+.sidebar_right {
+	margin: 0 0 0 300px;
 }
 </style>
 </head>
 
 <body data-ng-app="myApp" data-ng-controller="controller">
-	<div>
-		<samp>X軸數量</samp>
-		<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
-	</div>
-	<div>
-		<samp>Y軸數量</samp>
-		<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
-	</div>
-	<div>
-		<samp>炸彈數量</samp>
-		<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{ userIn.bombAllNb}}" title="y">
-	</div>
-	<br>
-	<br>
-	<div data-ng-if="arrayLsLs">
-		經過秒數
-		<samp id="gameTime" data-ng-model="gameTime">{{gameTime}}</samp>
-		剩餘炸彈
-		<samp id="gameTime" data-ng-model="remainBombNb">{{remainBombNb}}</samp>
-	</div>
-	<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb)">開始</button>
-	<div data-ng-repeat="row in arrayLsLs track by $index">
-		<button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index,remainBombNb)" data-ng-click="leftClick($parent.$index ,$index)" data-ng-repeat="cell in row track by $index">
+	<div class="sidebar_left">
+		<div>
+			<samp>X軸數量</samp>
+			<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
+		</div>
+		<div>
+			<samp>Y軸數量</samp>
+			<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
+		</div>
+		<div>
+			<samp>炸彈數量</samp>
+			<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{ userIn.bombAllNb}}" title="y">
+		</div>
 
-			<!-- 按下按鈕 && 炸彈計算數不為0 ===> 判斷是否為炸彈 -->
-			<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
-			<!-- 按下按鈕 && 炸彈計算數為0 -->
-			<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
-			<!-- 未按下按鈕===> 插旗判斷顏色-->
-			<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
 
-		</button>
+		<!-- 下拉式選單 -->
+		<div>
+			<select data-ng-model="chooseDifficulty">
+				<option value="">請選擇</option>
+				<option value="1">高級</option>
+				<option value="2">中級</option>
+				<option value="3">初級</option>
+				<option value="4">自訂</option>
+			</select>
+		</div>
+
+
+		<br> <br>
+		<div data-ng-if="arrayLsLs">
+			經過秒數
+			<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
+			剩餘炸彈
+			<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+		</div>
+		<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)">開始</button>
+	</div>
+	<div class="sidebar_right">
+		<table>
+			<tr data-ng-repeat="row in arrayLsLs track by $index">
+				<td data-ng-repeat="cell in row track by $index">
+					<button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index,remainBombNb)" data-ng-click="leftClick($parent.$index ,$index)">
+						<!-- 按下按鈕 && 炸彈計算數不為0 ===> 判斷是否為炸彈 -->
+						<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
+						<!-- 按下按鈕 && 炸彈計算數為0 -->
+						<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
+						<!-- 未按下按鈕===> 插旗判斷顏色-->
+						<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
+					</button>
+				</td>
+			</tr>
+		</table>
 	</div>
 </body>
 </html>
