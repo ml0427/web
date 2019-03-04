@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <title>練習踩地雷</title>
 <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="index.js"></script>
 <style>
 .button_style {
@@ -52,23 +53,9 @@
 
 <body data-ng-app="myApp" data-ng-controller="controller">
 	<div class="sidebar_left">
-		<div>
-			<samp>X軸數量</samp>
-			<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
-		</div>
-		<div>
-			<samp>Y軸數量</samp>
-			<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
-		</div>
-		<div>
-			<samp>炸彈數量</samp>
-			<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{ userIn.bombAllNb}}" title="y">
-		</div>
-
-
 		<!-- 下拉式選單 -->
 		<div>
-			<select data-ng-model="chooseDifficulty">
+			<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
 				<option value="">請選擇</option>
 				<option value="1">高級</option>
 				<option value="2">中級</option>
@@ -76,9 +63,20 @@
 				<option value="4">自訂</option>
 			</select>
 		</div>
-
-
-		<br> <br>
+		<div data-ng-show=" chooseDifficulty==4 ">
+			<div>
+				<samp>X軸數量</samp>
+				<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
+			</div>
+			<div>
+				<samp>Y軸數量</samp>
+				<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
+			</div>
+			<div>
+				<samp>炸彈數量</samp>
+				<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{ userIn.bombAllNb}}" title="y">
+			</div>
+		</div>
 		<div data-ng-if="arrayLsLs">
 			經過秒數
 			<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>

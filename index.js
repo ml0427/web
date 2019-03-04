@@ -17,8 +17,6 @@ app.directive('ngRightClick', function($parse) {
 app.controller('controller', function($scope, $timeout) {
 	var myCountTime;
 	$scope.gameStart = function(x, y, bombAllNb, chooseDifficulty) {
-		// console.log(x, y, bombAllNb);
-
 		// 時間清除
 		$timeout.cancel(myCountTime);
 		// 地圖初始化
@@ -31,7 +29,6 @@ app.controller('controller', function($scope, $timeout) {
 			x : x,
 			y : y
 		}
-
 		// 難度設定
 		$scope.difficulty($scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb, chooseDifficulty);
 		// 計時
@@ -43,11 +40,12 @@ app.controller('controller', function($scope, $timeout) {
 		// 計算炸彈數量
 		$scope.countNumberOfBombs($scope.parameter.x, $scope.parameter.y);
 
+		console.log("開始計時");
 	}
 
 	// 難度
 	$scope.difficulty = function(x, y, bombAllNb, chooseDifficulty) {
-		console.log("難度選擇", chooseDifficulty);
+		console.log("選擇難度");
 		switch (chooseDifficulty) {
 		case '1':
 			$scope.parameter.x = 16;
@@ -76,8 +74,12 @@ app.controller('controller', function($scope, $timeout) {
 		default:
 			break;
 		}
-		console.log("難度選擇結束", $scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb);
+		console.log("選擇" + $scope.chooseDifficultyName() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
 	}
+
+	$scope.chooseDifficultyName = function() {
+		return $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html();
+	};
 
 	// 計時器
 	$scope.countTime = function() {
@@ -88,7 +90,6 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 製造地圖
 	$scope.createMap = function(x, y) {
-
 		console.log("製造地圖");
 		for (i = 0; i < x; i++) {
 			$scope.arrayLsLs[i] = [];
@@ -108,11 +109,10 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 製作炸彈地圖
 	$scope.randomBombsMap = function(x, y, bombAllNb) {
-
 		if (bombAllNb > x * y) {
 			alert("炸彈超過地圖拉");
 		} else {
-			console.log("製作炸彈");
+			console.log("製作炸彈地圖");
 			for (var i = 0; i < bombAllNb; i++) {
 				var randomX = Math.floor(Math.random() * x);
 				var randomY = Math.floor(Math.random() * y);
@@ -124,7 +124,7 @@ app.controller('controller', function($scope, $timeout) {
 				}
 			}
 		}
-		console.log("製作炸彈結束");
+		console.log("製作炸彈地圖結束");
 	}
 
 	// 計算炸彈數量
@@ -349,57 +349,94 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 雙鍵功能
 	$scope.leftAndRightClick = function(i, j) {
-		console.log("雙鍵功能");
+		console.log("計算旗幟數量");
+		// 計算旗幟數量
+		var bannerNB = 0;
 		// 如果不是在最上邊
-		if (i != 0) {
-			if (!$scope.arrayLsLs[i - 1][j].banner && !$scope.arrayLsLs[i - 1][j].open) {
-				$scope.arrayLsLs[i - 1][j].open = true;
-			}
+		if (i != 0 && $scope.arrayLsLs[i - 1][j].banner) {
+			bannerNB++;
 		}
 		// 如果不是在最下邊
-		if (i != $scope.arrayLsLs.length - 1) {
-			if (!$scope.arrayLsLs[i + 1][j].banner && !$scope.arrayLsLs[i + 1][j].open) {
-				$scope.arrayLsLs[i + 1][j].open = true;
-			}
+		if (i != $scope.arrayLsLs.length - 1 && $scope.arrayLsLs[i + 1][j].banner) {
+			bannerNB++;
 		}
 		// 如果不是在最右邊
-		if (j != $scope.arrayLsLs[i].length - 1) {
-			if (!$scope.arrayLsLs[i][j + 1].banner && !$scope.arrayLsLs[i][j + 1].open) {
-				$scope.arrayLsLs[i][j + 1].open = true;
-			}
+		if (j != $scope.arrayLsLs[i].length - 1 && $scope.arrayLsLs[i][j + 1].banner) {
+			bannerNB++;
 		}
 		// 如果不是在最左邊
-		if (j != 0) {
-			if (!$scope.arrayLsLs[i][j - 1].banner && !$scope.arrayLsLs[i][j - 1].open) {
-				$scope.arrayLsLs[i][j - 1].open = true;
-			}
+		if (j != 0 && $scope.arrayLsLs[i][j - 1].banner) {
+			bannerNB++;
 		}
 		// 如果不是在最右下
-		if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1) {
-			if (!$scope.arrayLsLs[i + 1][j + 1].banner && !$scope.arrayLsLs[i + 1][j + 1].open) {
-				$scope.arrayLsLs[i + 1][j + 1].open = true;
-			}
+		if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1 && $scope.arrayLsLs[i + 1][j + 1].banner) {
+			bannerNB++;
 		}
 		// 如果不是在最左下
-		if (i != $scope.arrayLsLs.length - 1 && j != 0) {
-			if (!$scope.arrayLsLs[i + 1][j - 1].banner && !$scope.arrayLsLs[i + 1][j - 1].open) {
-				$scope.arrayLsLs[i + 1][j - 1].open = true;
-			}
+		if (i != $scope.arrayLsLs.length - 1 && j != 0 && $scope.arrayLsLs[i + 1][j - 1].banner) {
+			bannerNB++;
 		}
 		// 如果不是在最右上
-		if (i != 0 && j != $scope.arrayLsLs[i].length - 1) {
-			if (!$scope.arrayLsLs[i - 1][j + 1].banner && !$scope.arrayLsLs[i - 1][j + 1].open) {
-				$scope.arrayLsLs[i - 1][j + 1].open = true;
-			}
+		if (i != 0 && j != $scope.arrayLsLs[i].length - 1 && $scope.arrayLsLs[i - 1][j + 1].banner) {
+			bannerNB++;
 		}
 		// 如果不是在最左上
-		if (i != 0 && j != 0) {
-			if (!$scope.arrayLsLs[i - 1][j - 1].banner && !$scope.arrayLsLs[i - 1][j - 1].open) {
-				$scope.arrayLsLs[i - 1][j - 1].open = true;
-			}
+		if (i != 0 && j != 0 && $scope.arrayLsLs[i - 1][j - 1].banner) {
+			bannerNB++;
 		}
-		$scope.statusCheck(i, j);
 
+		if (bannerNB == $scope.arrayLsLs[i][j].bombNb) {
+			console.log("雙鍵功能");
+			// 如果不是在最上邊
+			if (i != 0) {
+				if (!$scope.arrayLsLs[i - 1][j].banner && !$scope.arrayLsLs[i - 1][j].open) {
+					$scope.arrayLsLs[i - 1][j].open = true;
+				}
+			}
+			// 如果不是在最下邊
+			if (i != $scope.arrayLsLs.length - 1) {
+				if (!$scope.arrayLsLs[i + 1][j].banner && !$scope.arrayLsLs[i + 1][j].open) {
+					$scope.arrayLsLs[i + 1][j].open = true;
+				}
+			}
+			// 如果不是在最右邊
+			if (j != $scope.arrayLsLs[i].length - 1) {
+				if (!$scope.arrayLsLs[i][j + 1].banner && !$scope.arrayLsLs[i][j + 1].open) {
+					$scope.arrayLsLs[i][j + 1].open = true;
+				}
+			}
+			// 如果不是在最左邊
+			if (j != 0) {
+				if (!$scope.arrayLsLs[i][j - 1].banner && !$scope.arrayLsLs[i][j - 1].open) {
+					$scope.arrayLsLs[i][j - 1].open = true;
+				}
+			}
+			// 如果不是在最右下
+			if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1) {
+				if (!$scope.arrayLsLs[i + 1][j + 1].banner && !$scope.arrayLsLs[i + 1][j + 1].open) {
+					$scope.arrayLsLs[i + 1][j + 1].open = true;
+				}
+			}
+			// 如果不是在最左下
+			if (i != $scope.arrayLsLs.length - 1 && j != 0) {
+				if (!$scope.arrayLsLs[i + 1][j - 1].banner && !$scope.arrayLsLs[i + 1][j - 1].open) {
+					$scope.arrayLsLs[i + 1][j - 1].open = true;
+				}
+			}
+			// 如果不是在最右上
+			if (i != 0 && j != $scope.arrayLsLs[i].length - 1) {
+				if (!$scope.arrayLsLs[i - 1][j + 1].banner && !$scope.arrayLsLs[i - 1][j + 1].open) {
+					$scope.arrayLsLs[i - 1][j + 1].open = true;
+				}
+			}
+			// 如果不是在最左上
+			if (i != 0 && j != 0) {
+				if (!$scope.arrayLsLs[i - 1][j - 1].banner && !$scope.arrayLsLs[i - 1][j - 1].open) {
+					$scope.arrayLsLs[i - 1][j - 1].open = true;
+				}
+			}
+			$scope.statusCheck(i, j);
+		}
 	}
 
 	$scope.rightClick = function(x, y) {
