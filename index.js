@@ -129,7 +129,6 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 計算炸彈數量
 	$scope.countNumberOfBombs = function(x, y) {
-
 		console.log("計算炸彈數量");
 		// 計算+1本炸彈左右邊的數字
 		for (var i = 0; i < x; i++) {
@@ -200,18 +199,17 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 檢查地圖
 	$scope.statusCheck = function(x, y) {
-
 		console.log("檢查地圖");
 		var isChecking = false;
 		$scope.goodGame = true;
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
-				
+
 				// 如果狀態未開，而且裡面不是炸彈的話
 				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb) {
 					$scope.goodGame = false;
 				}
-				
+
 				// 開到地雷
 				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
 					// 地圖全開
@@ -226,7 +224,6 @@ app.controller('controller', function($scope, $timeout) {
 				}
 				// 找到使用者輸入的位置
 				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].bombNb == 0) {
-
 					// 如果不是在最上邊
 					if (i != 0) {
 						if (!$scope.arrayLsLs[i - 1][j].isbomb && !$scope.arrayLsLs[i - 1][j].open) {
@@ -295,7 +292,7 @@ app.controller('controller', function($scope, $timeout) {
 		}
 		if (isChecking)
 			$scope.statusCheck(x, y);
-		
+
 		// 成功解地圖
 		if ($scope.goodGame) {
 			$timeout.cancel(myCountTime);
@@ -377,7 +374,7 @@ app.controller('controller', function($scope, $timeout) {
 			}
 		}
 		// 如果不是在最右下
-		if (i != $scope.arrayLsLs.length - 1 && j != !$scope.arrayLsLs[i].length - 1) {
+		if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1) {
 			if (!$scope.arrayLsLs[i + 1][j + 1].banner && !$scope.arrayLsLs[i + 1][j + 1].open) {
 				$scope.arrayLsLs[i + 1][j + 1].open = true;
 			}
