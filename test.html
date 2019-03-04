@@ -54,6 +54,53 @@
 	line-height: 80px;
 }
 </style>
+<script type="text/javascript">
+	var keepEvent = false;
+	var event1;
+	var event2;
+	document.onmousedown = function(e) {
+		if (event1) {
+			event2 = e;
+		} else {
+			event1 = e;
+		}
+	};
+
+	setInterval(function() {
+		if (keepEvent) {
+			if (event2) {
+				if (event1.button + event2.button == 2) {
+					onmouseclick('B');
+				} else if (event2.button == 2) {
+					onmouseclick('R');
+				} else {
+					onmouseclick('L');
+				}
+			} else if (event1.button == 2) {
+				onmouseclick('R');
+			} else {
+				onmouseclick('L');
+			}
+			keepEvent = false;
+			event1 = null;
+			event2 = null;
+		} else if (event1) {
+			keepEvent = true;
+		}
+	}, 100);
+
+	function onmouseclick(event) {
+		console.log(event);
+		switch (event) {
+		case 'L':
+			break;
+		case 'R':
+			break;
+		case 'B':
+			break;
+		}
+	}
+</script>
 </head>
 <body>
 	<div id="sitebody">

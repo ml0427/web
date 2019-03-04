@@ -47,43 +47,43 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 難度
 	$scope.difficulty = function(x, y, bombAllNb, chooseDifficulty) {
-
-		// 初級：9 × 9，10顆地雷（Windows 2000或以後）
-		// 中級：16 × 16，40顆地雷
-		// 高級：30 × 16，99顆地雷
 		console.log("難度選擇", chooseDifficulty);
-		if (chooseDifficulty == 1) {
+		switch (chooseDifficulty) {
+		case '1':
 			$scope.parameter.x = 16;
 			$scope.parameter.y = 30;
 			$scope.parameter.bombAllNb = 99;
 			$scope.parameter.remainBombNb = 99;
-		}
-		if (chooseDifficulty == 2) {
+			break;
+		case '2':
 			$scope.parameter.x = 16;
 			$scope.parameter.y = 16;
 			$scope.parameter.bombAllNb = 40;
 			$scope.parameter.remainBombNb = 40;
-		}
-		if (chooseDifficulty == 3) {
+			break;
+		case '3':
 			$scope.parameter.x = 9;
 			$scope.parameter.y = 9;
 			$scope.parameter.bombAllNb = 10;
 			$scope.parameter.remainBombNb = 10;
-		}
-		if (chooseDifficulty == 4) {
+			break;
+		case '4':
 			$scope.parameter.x = x;
 			$scope.parameter.y = y;
 			$scope.parameter.bombAllNb = bombAllNb;
 			$scope.parameter.remainBombNb = bombAllNb;
+			break;
+		default:
+			break;
 		}
-		console.log("難度選擇結束", x, y, bombAllNb);
+		console.log("難度選擇結束", $scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb);
 	}
 
 	// 計時器
 	$scope.countTime = function() {
-		$scope.parameter.gameTime++;
-		myCountTime = $timeout($scope.countTime, 1000);
-		console.log($scope.parameter.gameTime + "秒");
+		// $scope.parameter.gameTime++;
+		// myCountTime = $timeout($scope.countTime, 1000);
+		// console.log($scope.parameter.gameTime + "秒");
 	};
 
 	// 製造地圖
@@ -297,28 +297,38 @@ app.controller('controller', function($scope, $timeout) {
 		}
 	}
 
-	// 滑鼠左右鍵判斷
-	// $scope.clickJudgment = function(x, y, isRightClick, isLeftClick) {
-	// console.log("in clickJudgment", isRightClick, isLeftClick);
-	//		
-	// myClickJudgment = $timeout($scope.aaa(x, y, isRightClick, isLeftClick),
-	// 1000);
-	// console.log("看看");
-	// $timeout.cancel(myClickJudgment);
-	// }
-
-	// $scope.aaa = function(x, y, isRightClick, isLeftClick) {
-	// console.log("in clickJudgment function", isRightClick, isLeftClick);
-	// if (isRightClick && isLeftClick) {
+	// $scope.isRightClick = false;
+	// $scope.isLeftClick = false;
+	// // 滑鼠左右鍵判斷
+	// $scope.clickJudgment = function(x, y, isLeftClick, isRightClick) {
+	// console.log("in clickJudgment", isLeftClick, isRightClick);
+	//
+	// $scope.isLeftClick = isLeftClick || $scope.isLeftClick;
+	// $scope.isRightClick = isRightClick || $scope.isRightClick;
+	//
+	// myClickJudgment = $timeout(function() {
+	// if ($scope.isRightClick && $scope.isLeftClick) {
 	// // 左右同時
-	// } else if (!isRightClick && isLeftClick) {
+	// console.log("左右同時");
+	// $scope.isRightClick = false;
+	// $scope.isLeftClick = false;
+	// } else if ($scope.isLeftClick) {
 	// // 左
+	// console.log("左");
+	// $scope.isRightClick = false;
+	// $scope.isLeftClick = false;
 	// $scope.leftClick(x, y);
-	// } else if (isRightClick && !isLeftClick) {
+	// } else if ($scope.isRightClick) {
 	// // 右
+	// console.log("右");
+	// $scope.isRightClick = false;
+	// $scope.isLeftClick = false;
 	// $scope.rightClick(x, y);
 	// }
-	// }
+	// }, 200);
+	//
+	// console.log("紀錄", $scope.isLeftClick, $scope.isRightClick);
+	//	}
 
 	$scope.rightClick = function(x, y) {
 
@@ -330,7 +340,6 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	$scope.leftClick = function(x, y) {
-
 		if (!$scope.arrayLsLs[x][y].banner) {
 			$scope.arrayLsLs[x][y].open = true;
 			if (!$scope.arrayLsLs[x][y].isbomb) {
