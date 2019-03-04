@@ -204,14 +204,13 @@ app.controller('controller', function($scope, $timeout) {
 		$scope.goodGame = true;
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
-
 				// 如果狀態未開，而且裡面不是炸彈的話
 				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb) {
 					$scope.goodGame = false;
 				}
-
 				// 開到地雷
 				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
+					$scope.goodGame = false;
 					// 地圖全開
 					for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 						for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
@@ -221,6 +220,8 @@ app.controller('controller', function($scope, $timeout) {
 					}
 					$timeout.cancel(myCountTime);
 					alert("you are die");
+					break;
+					break;
 				}
 				// 找到使用者輸入的位置
 				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].bombNb == 0) {
@@ -309,7 +310,7 @@ app.controller('controller', function($scope, $timeout) {
 			} else {
 				$scope.parameter.remainBombNb++;
 			}
-			console.log("計算炸彈剩餘數量", $scope.remainBombNb);
+			console.log("計算炸彈剩餘數量", $scope.parameter.remainBombNb);
 		}
 	}
 
