@@ -81,9 +81,9 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 計時器
 	$scope.countTime = function() {
-		// $scope.parameter.gameTime++;
-		// myCountTime = $timeout($scope.countTime, 1000);
-		// console.log($scope.parameter.gameTime + "秒");
+		$scope.parameter.gameTime++;
+		myCountTime = $timeout($scope.countTime, 1000);
+		console.log($scope.parameter.gameTime + "秒");
 	};
 
 	// 製造地圖
@@ -206,9 +206,23 @@ app.controller('controller', function($scope, $timeout) {
 		$scope.goodGame = true;
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
+				
 				// 如果狀態未開，而且裡面不是炸彈的話
 				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb) {
 					$scope.goodGame = false;
+				}
+				
+				// 開到地雷
+				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
+					// 地圖全開
+					for (var i = 0; i < $scope.arrayLsLs.length; i++) {
+						for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
+							$scope.arrayLsLs[i][j].banner = false;
+							$scope.arrayLsLs[i][j].open = true;
+						}
+					}
+					$timeout.cancel(myCountTime);
+					alert("you are die");
 				}
 				// 找到使用者輸入的位置
 				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].bombNb == 0) {
@@ -281,7 +295,12 @@ app.controller('controller', function($scope, $timeout) {
 		}
 		if (isChecking)
 			$scope.statusCheck(x, y);
-
+		
+		// 成功解地圖
+		if ($scope.goodGame) {
+			$timeout.cancel(myCountTime);
+			alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
+		}
 		console.log("檢查地圖結束");
 	}
 
@@ -328,13 +347,70 @@ app.controller('controller', function($scope, $timeout) {
 	// }, 200);
 	//
 	// console.log("紀錄", $scope.isLeftClick, $scope.isRightClick);
-	//	}
+	// }
+
+	// 雙鍵功能
+	$scope.leftAndRightClick = function(i, j) {
+		console.log("雙鍵功能");
+		// 如果不是在最上邊
+		if (i != 0) {
+			if (!$scope.arrayLsLs[i - 1][j].banner && !$scope.arrayLsLs[i - 1][j].open) {
+				$scope.arrayLsLs[i - 1][j].open = true;
+			}
+		}
+		// 如果不是在最下邊
+		if (i != $scope.arrayLsLs.length - 1) {
+			if (!$scope.arrayLsLs[i + 1][j].banner && !$scope.arrayLsLs[i + 1][j].open) {
+				$scope.arrayLsLs[i + 1][j].open = true;
+			}
+		}
+		// 如果不是在最右邊
+		if (j != $scope.arrayLsLs[i].length - 1) {
+			if (!$scope.arrayLsLs[i][j + 1].banner && !$scope.arrayLsLs[i][j + 1].open) {
+				$scope.arrayLsLs[i][j + 1].open = true;
+			}
+		}
+		// 如果不是在最左邊
+		if (j != 0) {
+			if (!$scope.arrayLsLs[i][j - 1].banner && !$scope.arrayLsLs[i][j - 1].open) {
+				$scope.arrayLsLs[i][j - 1].open = true;
+			}
+		}
+		// 如果不是在最右下
+		if (i != $scope.arrayLsLs.length - 1 && j != !$scope.arrayLsLs[i].length - 1) {
+			if (!$scope.arrayLsLs[i + 1][j + 1].banner && !$scope.arrayLsLs[i + 1][j + 1].open) {
+				$scope.arrayLsLs[i + 1][j + 1].open = true;
+			}
+		}
+		// 如果不是在最左下
+		if (i != $scope.arrayLsLs.length - 1 && j != 0) {
+			if (!$scope.arrayLsLs[i + 1][j - 1].banner && !$scope.arrayLsLs[i + 1][j - 1].open) {
+				$scope.arrayLsLs[i + 1][j - 1].open = true;
+			}
+		}
+		// 如果不是在最右上
+		if (i != 0 && j != $scope.arrayLsLs[i].length - 1) {
+			if (!$scope.arrayLsLs[i - 1][j + 1].banner && !$scope.arrayLsLs[i - 1][j + 1].open) {
+				$scope.arrayLsLs[i - 1][j + 1].open = true;
+			}
+		}
+		// 如果不是在最左上
+		if (i != 0 && j != 0) {
+			if (!$scope.arrayLsLs[i - 1][j - 1].banner && !$scope.arrayLsLs[i - 1][j - 1].open) {
+				$scope.arrayLsLs[i - 1][j - 1].open = true;
+			}
+		}
+		$scope.statusCheck(i, j);
+
+	}
 
 	$scope.rightClick = function(x, y) {
-
 		$scope.countRemainBombNb(x, y);
 		if (!$scope.arrayLsLs[x][y].open) {
 			$scope.arrayLsLs[x][y].banner = !$scope.arrayLsLs[x][y].banner;
+		} else {
+			// 替代雙鍵功能
+			$scope.leftAndRightClick(x, y);
 		}
 		console.log("按了右鍵", "位置", x, y);
 	};
@@ -342,23 +418,7 @@ app.controller('controller', function($scope, $timeout) {
 	$scope.leftClick = function(x, y) {
 		if (!$scope.arrayLsLs[x][y].banner) {
 			$scope.arrayLsLs[x][y].open = true;
-			if (!$scope.arrayLsLs[x][y].isbomb) {
-				// 檢查地圖(開圖)
-				$scope.statusCheck(x, y);
-				if ($scope.goodGame) {
-					$timeout.cancel(myCountTime);
-					alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
-				}
-			} else {
-				for (var i = 0; i < $scope.arrayLsLs.length; i++) {
-					for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
-						$scope.arrayLsLs[i][j].banner = false;
-						$scope.arrayLsLs[i][j].open = true;
-					}
-				}
-				$timeout.cancel(myCountTime);
-				alert("you are die");
-			}
+			$scope.statusCheck(x, y);
 		}
 		console.log("按了左鍵", "位置", x, y);
 	}
