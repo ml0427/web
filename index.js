@@ -384,7 +384,6 @@ app.controller('controller', function($scope, $timeout) {
 		if (i != 0 && j != 0 && $scope.arrayLsLs[i - 1][j - 1].banner) {
 			bannerNB++;
 		}
-
 		if (bannerNB == $scope.arrayLsLs[i][j].bombNb) {
 			console.log("雙鍵功能");
 			// 如果不是在最上邊
