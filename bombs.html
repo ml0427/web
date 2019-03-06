@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>練習踩地雷</title>
+<!-- angularJS -->
+<script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+<!-- Jquery3.3.1 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Font Awesome 免費字圖 -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<script type="text/javascript" src="bombs.js"></script>
+<style>
+/*
+* {
+	font-size: 16px;
+}
+*/
+.button_style, td {
+	width: 26px;
+	height: 26px;
+	margin-bottom: 0;
+	padding: 0;
+}
+
+.button_div {
+	background-color: silver;
+	height: 22px;
+}
+
+.button_div_open {
+	height: 22px;
+	background: white;
+}
+
+.button_div_banner {
+	height: 22px;
+	background: green;
+}
+
+.button_div_bomb {
+	height: 22px;
+	background: red;
+}
+
+.table_center {
+	margin: auto;
+}
+
+.sidebar_left {
+	background-color: silver;
+	width: 300px;
+	float: left;
+}
+
+.sidebar_right {
+	margin: 0 0 0 300px;
+}
+</style>
+</head>
+
+<body data-ng-app="myApp" data-ng-controller="controller">
+	<p class="text-left">向左对齐文本</p>
+	<p class="text-center">居中对齐文本</p>
+	<p class="text-right">向右对齐文本</p>
+	<div class="sidebar_left ">
+		<!-- 下拉式選單 -->
+		<div>
+			<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
+				<option value="">請選擇</option>
+				<option value="1">高級</option>
+				<option value="2">中級</option>
+				<option value="3">初級</option>
+				<option value="4">自訂</option>
+			</select>
+		</div>
+		<div data-ng-show=" chooseDifficulty==4 ">
+			<div>
+				<samp>X軸數量</samp>
+				<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
+			</div>
+			<div>
+				<samp>Y軸數量</samp>
+				<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
+			</div>
+			<div>
+				<samp>炸彈數量</samp>
+				<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
+			</div>
+		</div>
+		<div data-ng-if="arrayLsLs">
+			<samp>經過秒數</samp>
+			<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
+			<samp>剩餘炸彈</samp>
+			<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+		</div>
+		<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)">開始</button>
+	</div>
+	<div class="sidebar_right">
+		<table data-ng-right-click="">
+			<tr data-ng-repeat="row in arrayLsLs track by $index">
+				<td data-ng-repeat="cell in row track by $index">
+					<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
+					<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
+						<!-- 按下按鈕 && 炸彈計算數不為0 -->
+						<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
+						<!-- 按下按鈕 && 炸彈計算數為0 -->
+						<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
+						<!-- 未按下按鈕===> 插旗判斷顏色-->
+						<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
+					</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

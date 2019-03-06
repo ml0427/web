@@ -1,115 +1,178 @@
-<!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="UTF-8">
-<title>練習踩地雷</title>
+<title>測試用</title>
 <!-- angularJS -->
 <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
 <!-- Jquery3.3.1 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- Bootstrap  -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-<script type="text/javascript" src="index.js"></script>
-<style>
-.button_style {
-	width: 20px;
-	height: 20px;
-	margin-bottom: 0;
-	padding: 0;
-}
-
-.button_div {
-	background-color: silver;
-	height: 16px;
-}
-
-.button_div_open {
-	height: 16px;
-	background: white;
-}
-
-.button_div_banner {
-	height: 16px;
-	background: green;
-}
-
-.button_div_bomb {
-	height: 16px;
-	background: red;
-}
-
-.table_center {
-	margin: auto;
-}
-
-.sidebar_left {
-	background-color: silver;
-	width: 300px;
-	float: left;
-}
-
-.sidebar_right {
-	margin: 0 0 0 300px;
-}
-</style>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Font Awesome 免費字圖 -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 </head>
 
-<body data-ng-app="myApp" data-ng-controller="controller">
-	<p class="text-left">向左对齐文本</p>
-	<p class="text-center">居中对齐文本</p>
-	<p class="text-right">向右对齐文本</p>
-	<div class="sidebar_left ">
-		<!-- 下拉式選單 -->
-		<div>
-			<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
-				<option value="">請選擇</option>
-				<option value="1">高級</option>
-				<option value="2">中級</option>
-				<option value="3">初級</option>
-				<option value="4">自訂</option>
-			</select>
-		</div>
-		<div data-ng-show=" chooseDifficulty==4 ">
-			<div>
-				<samp>X軸數量</samp>
-				<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
+<body>
+	<div class="container">
+		<div class="row clearfix">
+			<!-- 選單 -->
+			<div class="col-md-12 ">
+				<nav class="navbar navbar-default navbar-inverse" role="navigation">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="index.html">首頁</a>
+					</div>
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li class="active">
+								<a href="#">Link</a>
+							</li>
+							<li>
+								<a href="#">Link</a>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									Dropdown
+									<strong class="caret"></strong>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">Action</a>
+									</li>
+									<li>
+										<a href="#">Another action</a>
+									</li>
+									<li>
+										<a href="#">Something else here</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href="#">Separated link</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href="#">One more separated link</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<form class="navbar-form navbar-left" role="search">
+							<div class="form-group">
+								<input type="text" class="form-control">
+							</div>
+							<button type="submit" class="btn btn-default">Submit</button>
+						</form>
+						<ul class="nav navbar-nav navbar-right">
+							<li>
+								<a href="#">Link</a>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									Dropdown
+									<strong class="caret"></strong>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">Action</a>
+									</li>
+									<li>
+										<a href="#">Another action</a>
+									</li>
+									<li>
+										<a href="#">Something else here</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href="#">Separated link</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>
 			</div>
-			<div>
-				<samp>Y軸數量</samp>
-				<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
-			</div>
-			<div>
-				<samp>炸彈數量</samp>
-				<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{ userIn.bombAllNb}}" title="y">
-			</div>
 		</div>
-		<div data-ng-if="arrayLsLs">
-			經過秒數
-			<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
-			剩餘炸彈
-			<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
-		</div>
-		<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)">開始</button>
-	</div>
-	<div class="sidebar_right">
-		<table data-ng-right-click="">
-			<tr data-ng-repeat="row in arrayLsLs track by $index">
-				<td data-ng-repeat="cell in row track by $index">
-					<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
-					<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
-						<!-- 按下按鈕 && 炸彈計算數不為0 ===> 判斷是否為炸彈 -->
-						<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
-						<!-- 按下按鈕 && 炸彈計算數為0 -->
-						<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
-						<!-- 未按下按鈕===> 插旗判斷顏色-->
-						<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
-					</button>
-				</td>
-			</tr>
-		</table>
-	</div>
 
+		<!-- 投影片 -->
+		<div class="row clearfix">
+			<div class="col-md-12 ">
+				<div class="carousel slide" id="carousel">
+					<ol class="carousel-indicators">
+						<li class="active" data-slide-to="0" data-target="#carousel"></li>
+						<li data-slide-to="1" data-target="#carousel"></li>
+						<li data-slide-to="2" data-target="#carousel"></li>
+					</ol>
+					<div class="carousel-inner">
+						<div class="item active">
+							<img alt="" src="http://www.runoob.com/try/bootstrap/layoutit/v3/default.jpg">
+							<div class="carousel-caption">
+								<h4>First Thumbnail label</h4>
+								<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+							</div>
+						</div>
+						<div class="item">
+							<img alt="" src="http://www.runoob.com/try/bootstrap/layoutit/v3/default1.jpg">
+							<div class="carousel-caption">
+								<h4>Second Thumbnail label</h4>
+								<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+							</div>
+						</div>
+						<div class="item">
+							<img alt="" src="http://www.runoob.com/try/bootstrap/layoutit/v3/default2.jpg">
+							<div class="carousel-caption">
+								<h4>Third Thumbnail label</h4>
+								<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+							</div>
+						</div>
+					</div>
+					<a class="left carousel-control" href="#carousel" data-slide="prev">
+						<span class="glyphicon glyphicon-chevron-left"></span>
+					</a>
+					<a class="right carousel-control" href="#carousel" data-slide="next">
+						<span class="glyphicon glyphicon-chevron-right"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<br>
+		<!-- 主題 -->
+		<div class="row clearfix">
+			<div class="col-md-12 ">
+				<div class="jumbotron">
+					<h1>Hello, world!</h1>
+					<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+					<p>
+						<a class="btn btn-primary btn-large" href="#">Learn more</a>
+					</p>
+				</div>
+			</div>
+		</div>
 
+		<!-- 內容 -->
+		<div class="row clearfix">
+			<div class="col-md-4 ">
+				<h2>Heading</h2>
+				<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+				<p>
+					<a class="btn" href="#">View details »</a>
+				</p>
+			</div>
+			<div class="col-md-4 ">
+				<h2>Heading</h2>
+				<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+				<p>
+					<a class="btn" href="#">View details »</a>
+				</p>
+			</div>
+			<div class="col-md-4 ">
+				<h2>Heading</h2>
+				<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+				<p>
+					<a class="btn" href="#">View details »</a>
+				</p>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
