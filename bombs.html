@@ -129,7 +129,7 @@
 			</div>
 		</div>
 
-		<div class="col-md-3">
+		<div class="col-md-3 jumbotron">
 			<!-- 下拉式選單 -->
 			<div>
 				<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
@@ -140,7 +140,7 @@
 					<option value="4">自訂</option>
 				</select>
 			</div>
-			<div data-ng-show=" chooseDifficulty==4 ">
+			<div data-ng-show="chooseDifficulty==4">
 				<div>
 					<samp>X軸數量</samp>
 					<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
@@ -160,7 +160,7 @@
 				<samp>剩餘炸彈</samp>
 				<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
 			</div>
-			<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)">開始</button>
+			<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
 		</div>
 		<div class="col-md-9">
 			<table data-ng-right-click="">
