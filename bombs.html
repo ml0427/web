@@ -50,134 +50,61 @@
 <body data-ng-app="myApp" data-ng-controller="controller">
 	<div class="container">
 		<div class="row clearfix">
-			<!-- 選單 -->
-			<div class="col-md-12 ">
-				<nav class="navbar navbar-default navbar-inverse" role="navigation">
-					<div class="navbar-header">
-						<a class="navbar-brand" href="index.html">首頁</a>
+			<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
+			<div data-ng-include="'common/header.html'"></div>
+			
+			<!-- 踩地雷 -->
+			<div class="col-md-3 jumbotron">
+				<!-- 下拉式選單 -->
+				<div>
+					<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
+						<option value="">請選擇</option>
+						<option value="1">高級</option>
+						<option value="2">中級</option>
+						<option value="3">初級</option>
+						<option value="4">自訂</option>
+					</select>
+				</div>
+				<div data-ng-show="chooseDifficulty==4">
+					<div>
+						<samp>X軸數量</samp>
+						<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
 					</div>
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-						<ul class="nav navbar-nav">
-							<li class="active">
-								<a href="bombs.html">踩地雷</a>
-							</li>
-							<li>
-								<a href="#">Link</a>
-							</li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									Dropdown
-									<strong class="caret"></strong>
-								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a href="#">Action</a>
-									</li>
-									<li>
-										<a href="#">Another action</a>
-									</li>
-									<li>
-										<a href="#">Something else here</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a href="#">Separated link</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a href="#">One more separated link</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<form class="navbar-form navbar-left" role="search">
-							<div class="form-group">
-								<input type="text" class="form-control">
-							</div>
-							<button type="submit" class="btn btn-default">Submit</button>
-						</form>
-						<ul class="nav navbar-nav navbar-right">
-							<li>
-								<a href="#">Link</a>
-							</li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									Dropdown
-									<strong class="caret"></strong>
-								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a href="#">Action</a>
-									</li>
-									<li>
-										<a href="#">Another action</a>
-									</li>
-									<li>
-										<a href="#">Something else here</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a href="#">Separated link</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
+					<div>
+						<samp>Y軸數量</samp>
+						<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
 					</div>
-				</nav>
+					<div>
+						<samp>炸彈數量</samp>
+						<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
+					</div>
+				</div>
+				<div data-ng-if="arrayLsLs">
+					<samp>經過秒數</samp>
+					<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
+					<samp>剩餘炸彈</samp>
+					<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+				</div>
+				<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
+			</div>
+			<div class="col-md-9">
+				<table data-ng-right-click="">
+					<tr data-ng-repeat="row in arrayLsLs track by $index">
+						<td data-ng-repeat="cell in row track by $index">
+							<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
+							<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
+								<!-- 按下按鈕 && 炸彈計算數不為0 -->
+								<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
+								<!-- 按下按鈕 && 炸彈計算數為0 -->
+								<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
+								<!-- 未按下按鈕===> 插旗判斷顏色-->
+								<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
+							</button>
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
-
-		<div class="col-md-3 jumbotron">
-			<!-- 下拉式選單 -->
-			<div>
-				<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
-					<option value="">請選擇</option>
-					<option value="1">高級</option>
-					<option value="2">中級</option>
-					<option value="3">初級</option>
-					<option value="4">自訂</option>
-				</select>
-			</div>
-			<div data-ng-show="chooseDifficulty==4">
-				<div>
-					<samp>X軸數量</samp>
-					<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
-				</div>
-				<div>
-					<samp>Y軸數量</samp>
-					<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
-				</div>
-				<div>
-					<samp>炸彈數量</samp>
-					<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
-				</div>
-			</div>
-			<div data-ng-if="arrayLsLs">
-				<samp>經過秒數</samp>
-				<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
-				<samp>剩餘炸彈</samp>
-				<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
-			</div>
-			<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
-		</div>
-		<div class="col-md-9">
-			<table data-ng-right-click="">
-				<tr data-ng-repeat="row in arrayLsLs track by $index">
-					<td data-ng-repeat="cell in row track by $index">
-						<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
-						<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
-							<!-- 按下按鈕 && 炸彈計算數不為0 -->
-							<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
-							<!-- 按下按鈕 && 炸彈計算數為0 -->
-							<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
-							<!-- 未按下按鈕===> 插旗判斷顏色-->
-							<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
-						</button>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</div>
 	</div>
 </body>
 </html>

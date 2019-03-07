@@ -1,5 +1,5 @@
-var app = angular.module('app', []);
+var app = angular.module('myApp', []);
 
 app.controller('controller', function($scope) {
-	$scope.templateUrl = 'header.html';
+	
 });
