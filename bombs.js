@@ -29,10 +29,10 @@ app.controller('controller', function($scope, $timeout) {
 			x : x,
 			y : y
 		}
-		// 難度設定
-		$scope.difficulty($scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb, chooseDifficulty);
 		// 計時
 		myCountTime = $timeout($scope.countTime, 1000);
+		// 難度設定
+		$scope.difficulty($scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb, chooseDifficulty);
 		// 製造地圖
 		$scope.createMap($scope.parameter.x, $scope.parameter.y);
 		// 製作炸彈
@@ -72,13 +72,21 @@ app.controller('controller', function($scope, $timeout) {
 			$scope.parameter.remainBombNb = bombAllNb;
 			break;
 		default:
+			$scope.chooseDifficulty = '';
+			$scope.parameter.x = 0;
+			$scope.parameter.y = 0;
+			$scope.parameter.bombAllNb = 0;
+			$scope.parameter.remainBombNb = 0;
+			$scope.arrayLsLs = [];
+			$timeout.cancel(myCountTime);
 			break;
 		}
 		console.log("選擇" + $scope.chooseDifficultyName() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
 	}
 
 	$scope.chooseDifficultyName = function() {
-		return $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html();
+		if ($scope.chooseDifficulty)
+			return $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html();
 	};
 
 	// 計時器
@@ -313,39 +321,6 @@ app.controller('controller', function($scope, $timeout) {
 			console.log("計算炸彈剩餘數量", $scope.parameter.remainBombNb);
 		}
 	}
-
-	// $scope.isRightClick = false;
-	// $scope.isLeftClick = false;
-	// // 滑鼠左右鍵判斷
-	// $scope.clickJudgment = function(x, y, isLeftClick, isRightClick) {
-	// console.log("in clickJudgment", isLeftClick, isRightClick);
-	//
-	// $scope.isLeftClick = isLeftClick || $scope.isLeftClick;
-	// $scope.isRightClick = isRightClick || $scope.isRightClick;
-	//
-	// myClickJudgment = $timeout(function() {
-	// if ($scope.isRightClick && $scope.isLeftClick) {
-	// // 左右同時
-	// console.log("左右同時");
-	// $scope.isRightClick = false;
-	// $scope.isLeftClick = false;
-	// } else if ($scope.isLeftClick) {
-	// // 左
-	// console.log("左");
-	// $scope.isRightClick = false;
-	// $scope.isLeftClick = false;
-	// $scope.leftClick(x, y);
-	// } else if ($scope.isRightClick) {
-	// // 右
-	// console.log("右");
-	// $scope.isRightClick = false;
-	// $scope.isLeftClick = false;
-	// $scope.rightClick(x, y);
-	// }
-	// }, 200);
-	//
-	// console.log("紀錄", $scope.isLeftClick, $scope.isRightClick);
-	// }
 
 	// 雙鍵功能
 	$scope.leftAndRightClick = function(i, j) {

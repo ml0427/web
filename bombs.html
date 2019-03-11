@@ -68,17 +68,23 @@
 					</select>
 				</div>
 				<div data-ng-show="chooseDifficulty==4">
-					<div>
-						<samp>X軸數量</samp>
-						<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<samp class="input-group-text">X軸數量 </samp>
+						</div>
+						<input class="form-control" id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
 					</div>
-					<div>
-						<samp>Y軸數量</samp>
-						<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<samp class="input-group-text">Y軸數量</samp>
+						</div>
+						<input class="form-control" id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
 					</div>
-					<div>
-						<samp>炸彈數量</samp>
-						<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<samp class="input-group-text">炸彈數量</samp>
+						</div>
+						<input class="form-control" id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
 					</div>
 				</div>
 				<div data-ng-if="arrayLsLs">
@@ -91,7 +97,8 @@
 						<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
 					</div>
 				</div>
-				<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
+				<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-disabled="!chooseDifficulty">遊戲開始</button>
+				<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,0)" data-ng-disabled="!chooseDifficulty">重新選擇</button>
 			</div>
 			<div class="col-md-9">
 				<table data-ng-right-click="">
