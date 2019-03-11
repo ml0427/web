@@ -52,61 +52,58 @@
 
 <body data-ng-app="myApp" data-ng-controller="controller">
 	<div class="container">
-		<div class="row clearfix">
-			<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
-			<div data-ng-include="'common/header.html'"></div>
-
-			<!-- 踩地雷 -->
-			<div class="col-md-3 jumbotron">
-				<!-- 下拉式選單 -->
+		<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
+		<div data-ng-include="'common/header.html'"></div>
+		<!-- 踩地雷 -->
+		<div class="col-md-3 jumbotron">
+			<!-- 下拉式選單 -->
+			<div>
+				<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
+					<option value="">請選擇</option>
+					<option value="1">高級</option>
+					<option value="2">中級</option>
+					<option value="3">初級</option>
+					<option value="4">自訂</option>
+				</select>
+			</div>
+			<div data-ng-show="chooseDifficulty==4">
 				<div>
-					<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
-						<option value="">請選擇</option>
-						<option value="1">高級</option>
-						<option value="2">中級</option>
-						<option value="3">初級</option>
-						<option value="4">自訂</option>
-					</select>
+					<samp>X軸數量</samp>
+					<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
 				</div>
-				<div data-ng-show="chooseDifficulty==4">
-					<div>
-						<samp>X軸數量</samp>
-						<input id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
-					</div>
-					<div>
-						<samp>Y軸數量</samp>
-						<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
-					</div>
-					<div>
-						<samp>炸彈數量</samp>
-						<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
-					</div>
+				<div>
+					<samp>Y軸數量</samp>
+					<input id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
 				</div>
-				<div data-ng-if="arrayLsLs">
-					<samp>經過秒數</samp>
-					<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
-					<samp>剩餘炸彈</samp>
-					<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+				<div>
+					<samp>炸彈數量</samp>
+					<input id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
 				</div>
-				<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
 			</div>
-			<div class="col-md-9">
-				<table data-ng-right-click="">
-					<tr data-ng-repeat="row in arrayLsLs track by $index">
-						<td data-ng-repeat="cell in row track by $index">
-							<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
-							<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
-								<!-- 按下按鈕 && 炸彈計算數不為0 -->
-								<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
-								<!-- 按下按鈕 && 炸彈計算數為0 -->
-								<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
-								<!-- 未按下按鈕===> 插旗判斷顏色-->
-								<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
-							</button>
-						</td>
-					</tr>
-				</table>
+			<div data-ng-if="arrayLsLs">
+				<samp>經過秒數</samp>
+				<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
+				<samp>剩餘炸彈</samp>
+				<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
 			</div>
+			<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
+		</div>
+		<div class="col-md-9">
+			<table data-ng-right-click="">
+				<tr data-ng-repeat="row in arrayLsLs track by $index">
+					<td data-ng-repeat="cell in row track by $index">
+						<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
+						<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
+							<!-- 按下按鈕 && 炸彈計算數不為0 -->
+							<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
+							<!-- 按下按鈕 && 炸彈計算數為0 -->
+							<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
+							<!-- 未按下按鈕===> 插旗判斷顏色-->
+							<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
+						</button>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </body>
