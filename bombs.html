@@ -59,64 +59,72 @@
 		<div class="row clearfix">
 			<div class="col-md-3">
 				<!-- 按鈕下拉選單 -->
-				<div>
-					<select class="custom-select" id="chooseDifficulty" data-ng-model="chooseDifficulty">
-						<option value="">請選擇</option>
-						<option value="1">高級</option>
-						<option value="2">中級</option>
-						<option value="3">初級</option>
-						<option value="4">自訂</option>
-					</select>
-				</div>
-				<div data-ng-show="chooseDifficulty==4">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<samp class="input-group-text">X軸數量 </samp>
-						</div>
-						<input class="form-control" id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
-					</div>
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<samp class="input-group-text">Y軸數量</samp>
-						</div>
-						<input class="form-control" id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
-					</div>
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<samp class="input-group-text">炸彈數量</samp>
-						</div>
-						<input class="form-control" id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
+				<div class="container">
+					<div class="alert alert-secondary">
+						<select class="custom-select" id="chooseDifficulty" data-ng-model="chooseDifficulty">
+							<option value="">請選擇</option>
+							<option value="1">高級</option>
+							<option value="2">中級</option>
+							<option value="3">初級</option>
+							<option value="4">自訂</option>
+						</select>
 					</div>
 				</div>
-				<div data-ng-if="arrayLsLs">
-					<div class="alert alert-secondary" role="alert">
-						<samp>經過秒數</samp>
-						<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
-					</div>
-					<div class="alert alert-secondary" role="alert">
-						<samp>剩餘炸彈</samp>
-						<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+				<div class="container">
+					<div data-ng-show="chooseDifficulty==4">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<samp class="input-group-text">X軸數量 </samp>
+							</div>
+							<input class="form-control" id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
+						</div>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<samp class="input-group-text">Y軸數量</samp>
+							</div>
+							<input class="form-control" id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
+						</div>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<samp class="input-group-text">炸彈數量</samp>
+							</div>
+							<input class="form-control" id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
+						</div>
 					</div>
 				</div>
-				<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-disabled="!chooseDifficulty">遊戲開始</button>
-				<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,0)" data-ng-disabled="!chooseDifficulty">重新選擇</button>
+				<div class="container">
+					<div data-ng-if="arrayLsLs">
+						<div class="alert alert-secondary" role="alert">
+							<samp>經過秒數</samp>
+							<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
+						</div>
+						<div class="alert alert-secondary" role="alert">
+							<samp>剩餘炸彈</samp>
+							<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+						</div>
+					</div>
+					<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-disabled="!chooseDifficulty">遊戲開始</button>
+					<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,0)" data-ng-disabled="!chooseDifficulty">重新選擇</button>
+				</div>
 			</div>
 			<div class="col-md-9">
-				<table data-ng-right-click="">
-					<tr data-ng-repeat="row in arrayLsLs track by $index">
-						<td data-ng-repeat="cell in row track by $index">
-							<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
-							<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
-								<!-- 按下按鈕 && 炸彈計算數不為0 -->
-								<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
-								<!-- 按下按鈕 && 炸彈計算數為0 -->
-								<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
-								<!-- 未按下按鈕===> 插旗判斷顏色-->
-								<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
-							</button>
-						</td>
-					</tr>
-				</table>
+				<div class="row justify-content-center">
+					<table data-ng-right-click="">
+						<tr data-ng-repeat="row in arrayLsLs track by $index">
+							<td data-ng-repeat="cell in row track by $index">
+								<!--  <button class="button_style" type="button" data-ng-right-click="rightClick($parent.$index ,$index)" data-ng-click="leftClick($parent.$index ,$index)">-->
+								<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
+									<!-- 按下按鈕 && 炸彈計算數不為0 -->
+									<div data-ng-if="cell.open == true && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
+									<!-- 按下按鈕 && 炸彈計算數為0 -->
+									<div data-ng-if="cell.open == true && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
+									<!-- 未按下按鈕===> 插旗判斷顏色-->
+									<div data-ng-if="cell.open == false " data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 		</div>
 		<br>
