@@ -77,7 +77,7 @@ app.controller('controller', function($scope, $timeout) {
 			$scope.parameter.y = 0;
 			$scope.parameter.bombAllNb = 0;
 			$scope.parameter.remainBombNb = 0;
-			$scope.arrayLsLs = [];
+			$scope.arrayLsLs = null;
 			$timeout.cancel(myCountTime);
 			break;
 		}
