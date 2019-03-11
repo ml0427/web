@@ -50,16 +50,16 @@
 </style>
 </head>
 
-<body data-ng-app="myApp" data-ng-controller="controller">
+<body onmouseover="window.status='';return true;" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" data-ng-app="myApp" data-ng-controller="controller">
 	<div class="container">
 		<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
 		<div data-ng-include="'common/header.html'"></div>
 		<!-- 踩地雷 -->
 		<div class="row clearfix">
-			<div class="col-md-3 jumbotron">
-				<!-- 下拉式選單 -->
+			<div class="col-md-3">
+				<!-- 按鈕下拉選單 -->
 				<div>
-					<select id="chooseDifficulty" data-ng-model="chooseDifficulty">
+					<select class="custom-select" id="chooseDifficulty" data-ng-model="chooseDifficulty">
 						<option value="">請選擇</option>
 						<option value="1">高級</option>
 						<option value="2">中級</option>
@@ -82,12 +82,16 @@
 					</div>
 				</div>
 				<div data-ng-if="arrayLsLs">
-					<samp>經過秒數</samp>
-					<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
-					<samp>剩餘炸彈</samp>
-					<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+					<div class="alert alert-secondary" role="alert">
+						<samp>經過秒數</samp>
+						<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime}}</samp>
+					</div>
+					<div class="alert alert-secondary" role="alert">
+						<samp>剩餘炸彈</samp>
+						<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+					</div>
 				</div>
-				<button type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
+				<button class="btn btn-primary" type="submit" data-ng-click="gameStart(userIn.x,userIn.y,userIn.bombAllNb,chooseDifficulty)" data-ng-show="chooseDifficulty">開始</button>
 			</div>
 			<div class="col-md-9">
 				<table data-ng-right-click="">
@@ -106,6 +110,14 @@
 					</tr>
 				</table>
 			</div>
+		</div>
+	</div>
+
+	<div class="fixed-bottom">
+		<div class="container">
+			<samp>為了遊戲體驗，將滑鼠的選取功能禁止</samp>
+			<br>
+			<samp>資料參考:http://mirlab.org/jang/books/javascript/webContentProtection.asp?title=11-2%20%BA%F4%AD%B6%A4%BA%AEe%ABO%C5%40</samp>
 		</div>
 	</div>
 </body>
