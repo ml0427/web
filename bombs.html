@@ -50,8 +50,9 @@
 </style>
 </head>
 
-<body onmouseover="window.status='';return true;" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" data-ng-app="myApp" data-ng-controller="controller">
-	<div class="container">
+<!-- 禁止滑鼠右鍵、選取功能 onmouseover="window.status='';return true;" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" -->
+<body data-ng-app="myApp" data-ng-controller="controller">
+	<div onmouseover="window.status='';return true;" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" class="container">
 		<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
 		<div data-ng-include="'common/header.html'"></div>
 		<!-- 踩地雷 -->
@@ -118,11 +119,17 @@
 				</table>
 			</div>
 		</div>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<div class="dropdown-divider"></div>
 	</div>
-
+	<div></div>
 	<div class="fixed-bottom">
 		<div class="container">
-			<samp>為了遊戲體驗，將滑鼠的選取功能禁止(但是好像還是可以選？)</samp>
+			<samp>為了遊戲體驗，將滑鼠的選取功能禁止(這邊可以按右鍵)</samp>
 			<br>
 			<samp>資料參考:http://mirlab.org/jang/books/javascript/webContentProtection.asp?title=11-2%20%BA%F4%AD%B6%A4%BA%AEe%ABO%C5%40</samp>
 		</div>
