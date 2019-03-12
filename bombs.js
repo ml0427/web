@@ -48,8 +48,8 @@ app.controller('controller', function($scope, $timeout) {
 		console.log("選擇難度");
 		switch (chooseDifficulty) {
 		case '1':
-			$scope.parameter.x = 16;
-			$scope.parameter.y = 30;
+			$scope.parameter.x = 30;
+			$scope.parameter.y = 16;
 			$scope.parameter.bombAllNb = 99;
 			$scope.parameter.remainBombNb = 99;
 			break;
@@ -99,12 +99,12 @@ app.controller('controller', function($scope, $timeout) {
 	// 製造地圖
 	$scope.createMap = function(x, y) {
 		console.log("製造地圖");
-		for (i = 0; i < x; i++) {
+		for (i = 0; i < y; i++) {
 			$scope.arrayLsLs[i] = [];
-			for (j = 0; j < y; j++) {
+			for (j = 0; j < x; j++) {
 				$scope.arrayLsLs[i][j] = {
-					x : i,
-					y : j,
+					y : i,
+					x : j,
 					bombNb : 0,
 					open : false,
 					banner : false,
@@ -124,11 +124,11 @@ app.controller('controller', function($scope, $timeout) {
 			for (var i = 0; i < bombAllNb; i++) {
 				var randomX = Math.floor(Math.random() * x);
 				var randomY = Math.floor(Math.random() * y);
-				if ($scope.arrayLsLs[randomX][randomY].isbomb == true) {
+				if ($scope.arrayLsLs[randomY][randomX].isbomb == true) {
 					i--;
 				} else {
-					$scope.arrayLsLs[randomX][randomY].isbomb = true;
-					$scope.arrayLsLs[randomX][randomY].bombNb = "x";
+					$scope.arrayLsLs[randomY][randomX].isbomb = true;
+					$scope.arrayLsLs[randomY][randomX].bombNb = "x";
 				}
 			}
 		}
@@ -139,8 +139,8 @@ app.controller('controller', function($scope, $timeout) {
 	$scope.countNumberOfBombs = function(x, y) {
 		console.log("計算炸彈數量");
 		// 計算+1本炸彈左右邊的數字
-		for (var i = 0; i < x; i++) {
-			for (var j = 0; j < y; j++) {
+		for (var i = 0; i < y; i++) {
+			for (var j = 0; j < x; j++) {
 				// 找到*的位置
 				if ($scope.arrayLsLs[i][j].isbomb) {
 					// 如果不是在最上邊
@@ -206,7 +206,7 @@ app.controller('controller', function($scope, $timeout) {
 	}
 
 	// 檢查地圖
-	$scope.statusCheck = function(x, y) {
+	$scope.statusCheck = function(y, x) {
 		console.log("檢查地圖");
 		var isChecking = false;
 		$scope.goodGame = true;
@@ -300,7 +300,7 @@ app.controller('controller', function($scope, $timeout) {
 			}
 		}
 		if (isChecking)
-			$scope.statusCheck(x, y);
+			$scope.statusCheck(y, x);
 
 		// 成功解地圖
 		if ($scope.goodGame) {
@@ -311,9 +311,9 @@ app.controller('controller', function($scope, $timeout) {
 	}
 
 	// 計算炸彈剩餘數量
-	$scope.countRemainBombNb = function(x, y) {
-		if (!$scope.arrayLsLs[x][y].open) {
-			if (!$scope.arrayLsLs[x][y].banner) {
+	$scope.countRemainBombNb = function(y, x) {
+		if (!$scope.arrayLsLs[y][x].open) {
+			if (!$scope.arrayLsLs[y][x].banner) {
 				$scope.parameter.remainBombNb--;
 			} else {
 				$scope.parameter.remainBombNb++;
@@ -323,7 +323,7 @@ app.controller('controller', function($scope, $timeout) {
 	}
 
 	// 雙鍵功能
-	$scope.leftAndRightClick = function(i, j) {
+	$scope.leftAndRightClick = function(j, i) {
 		console.log("計算旗幟數量");
 		// 計算旗幟數量
 		var bannerNB = 0;
@@ -413,10 +413,10 @@ app.controller('controller', function($scope, $timeout) {
 		}
 	}
 
-	$scope.rightClick = function(x, y) {
-		$scope.countRemainBombNb(x, y);
-		if (!$scope.arrayLsLs[x][y].open) {
-			$scope.arrayLsLs[x][y].banner = !$scope.arrayLsLs[x][y].banner;
+	$scope.rightClick = function(y, x) {
+		$scope.countRemainBombNb(y, x);
+		if (!$scope.arrayLsLs[y][x].open) {
+			$scope.arrayLsLs[y][x].banner = !$scope.arrayLsLs[y][x].banner;
 		} else {
 			// 替代雙鍵功能
 			$scope.leftAndRightClick(x, y);
@@ -424,10 +424,10 @@ app.controller('controller', function($scope, $timeout) {
 		console.log("按了右鍵", "位置", x, y);
 	};
 
-	$scope.leftClick = function(x, y) {
-		if (!$scope.arrayLsLs[x][y].banner) {
-			$scope.arrayLsLs[x][y].open = true;
-			$scope.statusCheck(x, y);
+	$scope.leftClick = function(y, x) {
+		if (!$scope.arrayLsLs[y][x].banner) {
+			$scope.arrayLsLs[y][x].open = true;
+			$scope.statusCheck(y, x);
 		}
 		console.log("按了左鍵", "位置", x, y);
 	}
