@@ -54,7 +54,7 @@
 <body data-ng-app="myApp" data-ng-controller="controller">
 	<div onmouseover="window.status='';return true;" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" class="container">
 		<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
-		<div data-ng-include="../common/header.html"></div>
+		<div data-ng-include="'../common/header.html'"></div>
 		<!-- 踩地雷 -->
 		<div class="row clearfix">
 			<div class="col-md-3">
