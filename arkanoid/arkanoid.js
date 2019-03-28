@@ -1,3 +1,9 @@
+var app = angular.module('app', []);
+
+app.controller('controller', function($scope) {
+	
+});
+
 // JavaScript code goes here
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
