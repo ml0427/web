@@ -8,9 +8,15 @@ canvas {
 	background: #eee;
 }
 </style>
+<!-- angularJS -->
+<script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
 </head>
 <body>
+	<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
+	<div data-ng-include="'common/header.html'"></div>
 	<canvas id="myCanvas" width="500" height="200"></canvas>
 	<script type="text/javascript" src="arkanoid.js"></script>
+	<!-- 吸附特效 -->
+	<script type="text/javascript" src="../common/bg.js"></script>
 </body>
 </html>
