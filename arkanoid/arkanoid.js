@@ -22,7 +22,7 @@ var ballRadius = 10;
 // 反射板
 var paddleHeight = 10;
 var paddleWidth = 75;
-var paddleX = (canvas.width - paddleWidth) / 2;
+var paddleX = ((canvas.width - paddleWidth) / 3) * 2;
 
 // 鍵盤控制
 var rightPressed = false;
