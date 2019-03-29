@@ -151,6 +151,13 @@ function collisionDetection() {
 		ctx.fill();
 	}
 	if (isCanvasBottom() || isCanvasTop()) {
+		if (scores % 15 == 0) {
+			for (var c = 0; c < brickColumnCount; c++) {
+				for (var r = 0; r < brickRowCount; r++) {
+					bricks[c][r].status = 1;
+				}
+			}
+		}
 		dy = -dy;
 		ctx.fillStyle = getRandomColor();
 		ctx.fill();
