@@ -221,7 +221,7 @@ app.controller('controller', function($scope, $timeout) {
 	}
 
 	// 檢查地圖
-	$scope.statusCheck = function(y, x) {
+	$scope.statusCheck = function() {
 		console.log("檢查地圖");
 		var isChecking = false;
 		$scope.goodGame = true;
@@ -230,21 +230,6 @@ app.controller('controller', function($scope, $timeout) {
 				// 如果狀態未開，而且裡面不是炸彈的話
 				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb) {
 					$scope.goodGame = false;
-				}
-				// 開到地雷
-				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
-					$scope.goodGame = false;
-					// 地圖全開
-					for (var i = 0; i < $scope.arrayLsLs.length; i++) {
-						for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
-							$scope.arrayLsLs[i][j].banner = false;
-							$scope.arrayLsLs[i][j].open = true;
-						}
-					}
-					$timeout.cancel(myCountTime);
-					alert("you are die");
-					break;
-					break;
 				}
 				// 找到使用者輸入的位置
 				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].bombNb == 0) {
@@ -315,14 +300,27 @@ app.controller('controller', function($scope, $timeout) {
 			}
 		}
 		if (isChecking)
-			$scope.statusCheck(y, x);
-
+			$scope.statusCheck();
 		// 成功解地圖
 		if ($scope.goodGame) {
 			$timeout.cancel(myCountTime);
 			alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
 		}
 		console.log("檢查地圖結束");
+	}
+	
+	// 死亡
+	$scope.die = function() {
+		$scope.goodGame = false;
+		// 地圖全開
+		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
+			for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
+				$scope.arrayLsLs[i][j].banner = false;
+				$scope.arrayLsLs[i][j].open = true;
+			}
+		}
+		$timeout.cancel(myCountTime);
+		alert("you are die");
 	}
 
 	// 計算炸彈剩餘數量
@@ -424,7 +422,7 @@ app.controller('controller', function($scope, $timeout) {
 					$scope.arrayLsLs[i - 1][j - 1].open = true;
 				}
 			}
-			$scope.statusCheck(i, j);
+			$scope.statusCheck();
 		}
 	}
 
@@ -442,7 +440,12 @@ app.controller('controller', function($scope, $timeout) {
 	$scope.leftClick = function(y, x) {
 		if (!$scope.arrayLsLs[y][x].banner) {
 			$scope.arrayLsLs[y][x].open = true;
-			$scope.statusCheck(y, x);
+			// 開到地雷
+			if ($scope.arrayLsLs[y][x].open && $scope.arrayLsLs[y][x].isbomb) {
+				$scope.die();
+			} else {
+				$scope.statusCheck();
+			}
 		}
 		console.log("按了左鍵", "位置", x, y);
 	}
