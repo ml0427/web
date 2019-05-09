@@ -15,18 +15,18 @@ app.directive('ngRightClick', function($parse) {
 });
 
 app.controller('controller', function($scope, $timeout) {
-	
+
 	// 要將alert改掉。 TODO
 
 	// 存入cookies 務必不要使用chrome，chrome不會儲存本地cookies
 	$scope.setCookie = function(cookieKey, cookieVelue) {
 		$.cookie(cookieKey, cookieVelue);
-		
+
 		// 下次修改為依程度區分，紀錄程度，秒數，名稱 TODO
 	};
 
 	var myCountTime;
-	$scope.gameStart = function(x, y, bombAllNb, chooseDifficulty) {
+	$scope.gameStart = function(chooseDifficulty) {
 		// 時間清除
 		$timeout.cancel(myCountTime);
 		// 地圖初始化
@@ -34,27 +34,27 @@ app.controller('controller', function($scope, $timeout) {
 		// 參數初始化
 		$scope.parameter = {
 			gameTime : 0,
-			bombAllNb : bombAllNb,
-			remainBombNb : bombAllNb,
-			x : x,
-			y : y
+			bombAllNb : 0,
+			remainBombNb : 0,
+			x : 0,
+			y : 0
 		}
 		// 計時
 		myCountTime = $timeout($scope.countTime, 1000);
 		// 難度設定
-		$scope.difficulty($scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb, chooseDifficulty);
+		$scope.difficulty(chooseDifficulty);
 		// 製造地圖
-		$scope.createMap($scope.parameter.x, $scope.parameter.y);
+		$scope.createMap($scope.parameter);
 		// 製作炸彈
-		$scope.randomBombsMap($scope.parameter.x, $scope.parameter.y, $scope.parameter.bombAllNb);
+		$scope.randomBombsMap($scope.parameter);
 		// 計算炸彈數量
-		$scope.countNumberOfBombs($scope.parameter.x, $scope.parameter.y);
+		$scope.countNumberOfBombs($scope.parameter);
 
 		console.log("開始計時");
 	};
 
 	// 難度
-	$scope.difficulty = function(x, y, bombAllNb, chooseDifficulty) {
+	$scope.difficulty = function(chooseDifficulty) {
 		console.log("選擇難度");
 		switch (chooseDifficulty) {
 		case '1':
@@ -76,10 +76,10 @@ app.controller('controller', function($scope, $timeout) {
 			$scope.parameter.remainBombNb = 10;
 			break;
 		case '4':
-			$scope.parameter.x = x;
-			$scope.parameter.y = y;
-			$scope.parameter.bombAllNb = bombAllNb;
-			$scope.parameter.remainBombNb = bombAllNb;
+			$scope.parameter.x = $scope.userIn.x;
+			$scope.parameter.y = $scope.userIn.y;
+			$scope.parameter.bombAllNb = $scope.userIn.bombAllNb;
+			$scope.parameter.remainBombNb = $scope.userIn.bombAllNb;
 			break;
 		default:
 			$scope.chooseDifficulty = '';
@@ -91,12 +91,7 @@ app.controller('controller', function($scope, $timeout) {
 			$timeout.cancel(myCountTime);
 			break;
 		}
-		console.log("選擇" + $scope.chooseDifficultyName() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
-	};
-
-	$scope.chooseDifficultyName = function() {
-		if ($scope.chooseDifficulty)
-			return $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html();
+		console.log("選擇" + $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
 	};
 
 	// 計時器
@@ -107,11 +102,11 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	// 製造地圖
-	$scope.createMap = function(x, y) {
+	$scope.createMap = function(parameter) {
 		console.log("製造地圖");
-		for (i = 0; i < y; i++) {
+		for (i = 0; i < parameter.y; i++) {
 			$scope.arrayLsLs[i] = [];
-			for (j = 0; j < x; j++) {
+			for (j = 0; j < parameter.x; j++) {
 				$scope.arrayLsLs[i][j] = {
 					y : i,
 					x : j,
@@ -126,7 +121,11 @@ app.controller('controller', function($scope, $timeout) {
 	}
 
 	// 製作炸彈地圖
-	$scope.randomBombsMap = function(x, y, bombAllNb) {
+	$scope.randomBombsMap = function(parameter) {
+		var x = parameter.x;
+		var y = parameter.y;
+		var bombAllNb = parameter.bombAllNb;
+
 		if (bombAllNb > x * y) {
 			alert("炸彈超過地圖拉");
 		} else {
@@ -146,7 +145,10 @@ app.controller('controller', function($scope, $timeout) {
 	}
 
 	// 計算炸彈數量
-	$scope.countNumberOfBombs = function(x, y) {
+	$scope.countNumberOfBombs = function(parameter) {
+
+		var x = parameter.x;
+		var y = parameter.y;
 		console.log("計算炸彈數量");
 		// 計算+1本炸彈左右邊的數字
 		for (var i = 0; i < y; i++) {
@@ -222,8 +224,13 @@ app.controller('controller', function($scope, $timeout) {
 		$scope.allOpen = true;
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
-				// 如果狀態未開，而且裡面不是炸彈的話
-				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb) {
+
+				// 如果已開且是炸彈，則死亡
+				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
+					$scope.die();
+				}
+				// 如果狀態未開，而且裡面不是炸彈的話，遊戲尚未結束
+				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb && $scope.allOpen) {
 					$scope.allOpen = false;
 				}
 				// 找到使用者輸入的位置
