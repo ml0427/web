@@ -91,7 +91,8 @@ app.controller('controller', function($scope, $timeout) {
 			$timeout.cancel(myCountTime);
 			break;
 		}
-		console.log("選擇" + $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
+		if (chooseDifficulty)
+			console.log("選擇" + $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
 	};
 
 	// 計時器
