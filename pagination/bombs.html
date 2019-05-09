@@ -131,16 +131,19 @@
 							</td>
 						</tr>
 					</table>
+					<div data-ng-if="test == true" class="input-group">
+						<div class="input-group-prepend">
+							<samp class="input-group-text">輸入名稱</samp>
+						</div>
+						<input class="form-control" data-ng-model="user.name" type="text">
+						<button class="btn btn-primary" type="submit" data-ng-click="setCookie(user.name,parameter.gameTime)">存入</button>
+					</div>
 				</div>
 			</div>
 		</div>
-
-		<button type="submit" data-ng-click="setCookie()">新增</button>
-		<button type="submit" data-ng-click="deleteCookie()">刪除</button>
-		<button type="submit" data-ng-click="getCookie()">查詢</button>
-
 		<br> <br> <br> <br> <br>
 		<div class="dropdown-divider"></div>
+
 	</div>
 
 	<div class="fixed-bottom">

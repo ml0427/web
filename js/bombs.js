@@ -16,18 +16,11 @@ app.directive('ngRightClick', function($parse) {
 
 app.controller('controller', function($scope, $timeout) {
 
+	// 存入cookies 務必不要使用chrome，chrome不會儲存本地cookies
 	$scope.setCookie = function(cookieKey, cookieVelue) {
 		$.cookie(cookieKey, cookieVelue);
-	};
-
-	$scope.deleteCookie = function(cookieKey) {
-		$.removeCookie(cookieKey);
-	};
-
-	$scope.getCookie = function(cookieKey) {
-		var out = $.cookie(cookieKey)
-		console.log(out);
-		return out;
+		
+		// 下次修改為依程度區分，紀錄程度，秒數，名稱 TODO
 	};
 
 	var myCountTime;
@@ -224,12 +217,12 @@ app.controller('controller', function($scope, $timeout) {
 	$scope.statusCheck = function() {
 		console.log("檢查地圖");
 		var isChecking = false;
-		$scope.goodGame = true;
+		$scope.allOpen = true;
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
 				// 如果狀態未開，而且裡面不是炸彈的話
 				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb) {
-					$scope.goodGame = false;
+					$scope.allOpen = false;
 				}
 				// 找到使用者輸入的位置
 				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].bombNb == 0) {
@@ -302,16 +295,21 @@ app.controller('controller', function($scope, $timeout) {
 		if (isChecking)
 			$scope.statusCheck();
 		// 成功解地圖
-		if ($scope.goodGame) {
-			$timeout.cancel(myCountTime);
-			alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
+		if ($scope.allOpen) {
+			$scope.goodGame();
 		}
 		console.log("檢查地圖結束");
 	}
-	
+
+	// 成功完成遊戲
+	$scope.goodGame = function() {
+		$scope.test = true;
+		$timeout.cancel(myCountTime);
+		alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
+	}
+
 	// 死亡
 	$scope.die = function() {
-		$scope.goodGame = false;
 		// 地圖全開
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
