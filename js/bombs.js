@@ -15,6 +15,7 @@ app.directive('ngRightClick', function($parse) {
 });
 
 app.controller('controller', function($scope, $timeout) {
+	console.log("4:25");
 
 	// 要將alert改掉。 TODO
 
