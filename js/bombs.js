@@ -15,6 +15,8 @@ app.directive('ngRightClick', function($parse) {
 });
 
 app.controller('controller', function($scope, $timeout) {
+	
+	// 要將alert改掉。 TODO
 
 	// 存入cookies 務必不要使用chrome，chrome不會儲存本地cookies
 	$scope.setCookie = function(cookieKey, cookieVelue) {
