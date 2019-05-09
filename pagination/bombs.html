@@ -10,10 +10,11 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <!-- 最新的 Bootstrap 核心 JavaScript 文件-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="bombs.js"></script>
+<script type="text/javascript" src="../js/bombs.js"></script>
 <style>
 .button_style, td {
 	width: 26px;
@@ -133,6 +134,11 @@
 				</div>
 			</div>
 		</div>
+
+		<button type="submit" data-ng-click="setCookie()">新增</button>
+		<button type="submit" data-ng-click="deleteCookie()">刪除</button>
+		<button type="submit" data-ng-click="getCookie()">查詢</button>
+
 		<br> <br> <br> <br> <br>
 		<div class="dropdown-divider"></div>
 	</div>
@@ -152,13 +158,13 @@
 						<br>
 						<samp>為了遊戲體驗，將滑鼠的右鍵、選取功能禁止(這邊可以按右鍵)</samp>
 						<br>
-						<samp>資料參考:<a href="http://mirlab.org/jang/books/javascript/webContentProtection.asp?title=11-2%20%BA%F4%AD%B6%A4%BA%AEe%ABO%C5%40">網頁內容保護</a></samp>
+						<samp>
+							資料參考:<a href="http://mirlab.org/jang/books/javascript/webContentProtection.asp?title=11-2%20%BA%F4%AD%B6%A4%BA%AEe%ABO%C5%40">網頁內容保護</a>
+						</samp>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- 吸附特效 -->
-	<script type="text/javascript" src="../common/bg.js"></script>
 </body>
 </html>

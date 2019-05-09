@@ -15,6 +15,21 @@ app.directive('ngRightClick', function($parse) {
 });
 
 app.controller('controller', function($scope, $timeout) {
+
+	$scope.setCookie = function(cookieKey, cookieVelue) {
+		$.cookie(cookieKey, cookieVelue);
+	};
+
+	$scope.deleteCookie = function(cookieKey) {
+		$.removeCookie(cookieKey);
+	};
+
+	$scope.getCookie = function(cookieKey) {
+		var out = $.cookie(cookieKey)
+		console.log(out);
+		return out;
+	};
+
 	var myCountTime;
 	$scope.gameStart = function(x, y, bombAllNb, chooseDifficulty) {
 		// 時間清除
@@ -41,7 +56,7 @@ app.controller('controller', function($scope, $timeout) {
 		$scope.countNumberOfBombs($scope.parameter.x, $scope.parameter.y);
 
 		console.log("開始計時");
-	}
+	};
 
 	// 難度
 	$scope.difficulty = function(x, y, bombAllNb, chooseDifficulty) {
@@ -82,7 +97,7 @@ app.controller('controller', function($scope, $timeout) {
 			break;
 		}
 		console.log("選擇" + $scope.chooseDifficultyName() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
-	}
+	};
 
 	$scope.chooseDifficultyName = function() {
 		if ($scope.chooseDifficulty)
