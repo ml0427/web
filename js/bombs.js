@@ -15,16 +15,24 @@ app.directive('ngRightClick', function($parse) {
 });
 
 app.controller('controller', function($scope, $timeout) {
-	console.log("4:25");
+	console.log("12:00");
 
+	$scope.cookieLs = $.cookie();
+	$scope.$watch('cookieLs', function(newValue, oldValue) {
+		console.log(newValue);
+	});
 	// 要將alert改掉。 TODO
 
-	// 存入cookies 務必不要使用chrome，chrome不會儲存本地cookies
-	$scope.setCookie = function(cookieKey, cookieVelue) {
+	// 存入cookies (務必不要使用chrome，chrome不會儲存本地cookies)
+	$scope.setCookie = function(cookieKey, gameTime, chooseDifficulty) {
+		var cookieVelue = gameTime + ',' + chooseDifficulty;
 		$.cookie(cookieKey, cookieVelue);
-
-		// 下次修改為依程度區分，紀錄程度，秒數，名稱 TODO
+		// TODO 更新畫面
 	};
+
+	// $scope.removerCookie = function(cookieKey) {
+	// $.removeCookie('zxc');
+	// };
 
 	var myCountTime;
 	$scope.gameStart = function(chooseDifficulty) {
@@ -39,7 +47,7 @@ app.controller('controller', function($scope, $timeout) {
 			remainBombNb : 0,
 			x : 0,
 			y : 0
-		}
+		};
 		// 計時
 		myCountTime = $timeout($scope.countTime, 1000);
 		// 難度設定
@@ -120,18 +128,17 @@ app.controller('controller', function($scope, $timeout) {
 			}
 		}
 		console.log("製造地圖結束");
-	}
+	};
 
 	// 製作炸彈地圖
 	$scope.randomBombsMap = function(parameter) {
+		console.log("製作炸彈地圖");
 		var x = parameter.x;
 		var y = parameter.y;
 		var bombAllNb = parameter.bombAllNb;
-
 		if (bombAllNb > x * y) {
-			alert("炸彈超過地圖拉");
+			alert("炸彈數量超過地圖拉");
 		} else {
-			console.log("製作炸彈地圖");
 			for (var i = 0; i < bombAllNb; i++) {
 				var randomX = Math.floor(Math.random() * x);
 				var randomY = Math.floor(Math.random() * y);
@@ -144,15 +151,14 @@ app.controller('controller', function($scope, $timeout) {
 			}
 		}
 		console.log("製作炸彈地圖結束");
-	}
+	};
 
-	// 計算炸彈數量
+	// 計算週圍炸彈數字
 	$scope.countNumberOfBombs = function(parameter) {
-
+		console.log("計算週圍炸彈數字");
 		var x = parameter.x;
 		var y = parameter.y;
-		console.log("計算炸彈數量");
-		// 計算+1本炸彈左右邊的數字
+		// 計算炸彈週圍數字
 		for (var i = 0; i < y; i++) {
 			for (var j = 0; j < x; j++) {
 				// 找到*的位置
@@ -216,108 +222,106 @@ app.controller('controller', function($scope, $timeout) {
 				}
 			}
 		}
-		console.log("計算炸彈數量結束");
-	}
+		console.log("計算週圍炸彈數字結束");
+	};
 
-	// 檢查地圖
+	// 檢查地圖&&開圖
 	$scope.statusCheck = function() {
-		console.log("檢查地圖");
-		var isChecking = false;
-		$scope.allOpen = true;
-		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
-			for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
-
-				// 如果已開且是炸彈，則死亡
-				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
-					$scope.die();
-				}
-				// 如果狀態未開，而且裡面不是炸彈的話，遊戲尚未結束
-				if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb && $scope.allOpen) {
-					$scope.allOpen = false;
-				}
-				// 找到使用者輸入的位置
-				if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].bombNb == 0) {
-					// 如果不是在最上邊
-					if (i != 0) {
-						if (!$scope.arrayLsLs[i - 1][j].isbomb && !$scope.arrayLsLs[i - 1][j].open) {
-							$scope.arrayLsLs[i - 1][j].open = true;
-							isChecking = true;
-						}
+		console.log("檢查地圖&&開圖");
+		do {
+			var isChecking = false;
+			$scope.allOpen = true;
+			for (var i = 0; i < $scope.arrayLsLs.length; i++) {
+				for (var j = 0; j < $scope.arrayLsLs[i].length; j++) {
+					// 如果已開且是炸彈，則死亡
+					if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
+						$scope.die();
 					}
-					// 如果不是在最下邊
-					if (i != $scope.arrayLsLs.length - 1) {
-						if (!$scope.arrayLsLs[i + 1][j].isbomb && !$scope.arrayLsLs[i + 1][j].open) {
-							// 下+1
-							$scope.arrayLsLs[i + 1][j].open = true;
-							isChecking = true;
-						}
+					// 如果狀態未開，而且裡面不是炸彈的話，遊戲尚未結束
+					if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb && $scope.allOpen) {
+						$scope.allOpen = false;
 					}
-					// 如果不是在最右邊
-					if (j != $scope.arrayLsLs[i].length - 1) {
-						if (!$scope.arrayLsLs[i][j + 1].isbomb && !$scope.arrayLsLs[i][j + 1].open) {
-							// 右+1
-							$scope.arrayLsLs[i][j + 1].open = true;
-							isChecking = true;
+					// 找到使用者輸入的位置
+					if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].bombNb == 0) {
+						// 如果不是在最上邊
+						if (i != 0) {
+							if (!$scope.arrayLsLs[i - 1][j].isbomb && !$scope.arrayLsLs[i - 1][j].open) {
+								$scope.arrayLsLs[i - 1][j].open = true;
+								isChecking = true;
+							}
 						}
-					}
-					// 如果不是在最左邊
-					if (j != 0) {
-						if (!$scope.arrayLsLs[i][j - 1].isbomb && !$scope.arrayLsLs[i][j - 1].open) {
-							// 左+1
-							$scope.arrayLsLs[i][j - 1].open = true;
-							isChecking = true;
+						// 如果不是在最下邊
+						if (i != $scope.arrayLsLs.length - 1) {
+							if (!$scope.arrayLsLs[i + 1][j].isbomb && !$scope.arrayLsLs[i + 1][j].open) {
+								// 下+1
+								$scope.arrayLsLs[i + 1][j].open = true;
+								isChecking = true;
+							}
 						}
-					}
-					// 如果不是在最右下
-					if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1) {
-						if (!$scope.arrayLsLs[i + 1][j + 1].isbomb && !$scope.arrayLsLs[i + 1][j + 1].open) {
-							// 右下+1
-							$scope.arrayLsLs[i + 1][j + 1].open = true;
-							isChecking = true;
+						// 如果不是在最右邊
+						if (j != $scope.arrayLsLs[i].length - 1) {
+							if (!$scope.arrayLsLs[i][j + 1].isbomb && !$scope.arrayLsLs[i][j + 1].open) {
+								// 右+1
+								$scope.arrayLsLs[i][j + 1].open = true;
+								isChecking = true;
+							}
 						}
-					}
-					// 如果不是在最左下
-					if (i != $scope.arrayLsLs.length - 1 && j != 0) {
-						if (!$scope.arrayLsLs[i + 1][j - 1].isbomb && !$scope.arrayLsLs[i + 1][j - 1].open) {
-							// 左下+1
-							$scope.arrayLsLs[i + 1][j - 1].open = true;
-							isChecking = true;
+						// 如果不是在最左邊
+						if (j != 0) {
+							if (!$scope.arrayLsLs[i][j - 1].isbomb && !$scope.arrayLsLs[i][j - 1].open) {
+								// 左+1
+								$scope.arrayLsLs[i][j - 1].open = true;
+								isChecking = true;
+							}
 						}
-					}
-					// 如果不是在最右上
-					if (i != 0 && j != $scope.arrayLsLs[i].length - 1) {
-						if (!$scope.arrayLsLs[i - 1][j + 1].isbomb && !$scope.arrayLsLs[i - 1][j + 1].open) {
-							// 右上+1
-							$scope.arrayLsLs[i - 1][j + 1].open = true;
-							isChecking = true;
+						// 如果不是在最右下
+						if (i != $scope.arrayLsLs.length - 1 && j != $scope.arrayLsLs[i].length - 1) {
+							if (!$scope.arrayLsLs[i + 1][j + 1].isbomb && !$scope.arrayLsLs[i + 1][j + 1].open) {
+								// 右下+1
+								$scope.arrayLsLs[i + 1][j + 1].open = true;
+								isChecking = true;
+							}
 						}
-					}
-					// 如果不是在最左上
-					if (i != 0 && j != 0) {
-						if (!$scope.arrayLsLs[i - 1][j - 1].isbomb && !$scope.arrayLsLs[i - 1][j - 1].open) {
-							// 左上+1
-							$scope.arrayLsLs[i - 1][j - 1].open = true;
-							isChecking = true;
+						// 如果不是在最左下
+						if (i != $scope.arrayLsLs.length - 1 && j != 0) {
+							if (!$scope.arrayLsLs[i + 1][j - 1].isbomb && !$scope.arrayLsLs[i + 1][j - 1].open) {
+								// 左下+1
+								$scope.arrayLsLs[i + 1][j - 1].open = true;
+								isChecking = true;
+							}
+						}
+						// 如果不是在最右上
+						if (i != 0 && j != $scope.arrayLsLs[i].length - 1) {
+							if (!$scope.arrayLsLs[i - 1][j + 1].isbomb && !$scope.arrayLsLs[i - 1][j + 1].open) {
+								// 右上+1
+								$scope.arrayLsLs[i - 1][j + 1].open = true;
+								isChecking = true;
+							}
+						}
+						// 如果不是在最左上
+						if (i != 0 && j != 0) {
+							if (!$scope.arrayLsLs[i - 1][j - 1].isbomb && !$scope.arrayLsLs[i - 1][j - 1].open) {
+								// 左上+1
+								$scope.arrayLsLs[i - 1][j - 1].open = true;
+								isChecking = true;
+							}
 						}
 					}
 				}
 			}
-		}
-		if (isChecking)
-			$scope.statusCheck();
+		} while (isChecking);
 		// 成功解地圖
-		if ($scope.allOpen) {
+		if ($scope.allOpen)
 			$scope.goodGame();
-		}
 		console.log("檢查地圖結束");
-	}
+	};
 
 	// 成功完成遊戲
 	$scope.goodGame = function() {
 		$scope.test = true;
 		$timeout.cancel(myCountTime);
 		alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
-	}
+	};
 
 	// 死亡
 	$scope.die = function() {
@@ -330,7 +334,7 @@ app.controller('controller', function($scope, $timeout) {
 		}
 		$timeout.cancel(myCountTime);
 		alert("you are die");
-	}
+	};
 
 	// 計算炸彈剩餘數量
 	$scope.countRemainBombNb = function(y, x) {
@@ -342,7 +346,7 @@ app.controller('controller', function($scope, $timeout) {
 			}
 			console.log("計算炸彈剩餘數量", $scope.parameter.remainBombNb);
 		}
-	}
+	};
 
 	// 雙鍵功能
 	$scope.leftAndRightClick = function(j, i) {
@@ -433,7 +437,7 @@ app.controller('controller', function($scope, $timeout) {
 			}
 			$scope.statusCheck();
 		}
-	}
+	};
 
 	$scope.rightClick = function(y, x) {
 		$scope.countRemainBombNb(y, x);
@@ -457,6 +461,6 @@ app.controller('controller', function($scope, $timeout) {
 			}
 		}
 		console.log("按了左鍵", "位置", x, y);
-	}
+	};
 
 });
