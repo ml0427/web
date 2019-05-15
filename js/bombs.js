@@ -1,5 +1,6 @@
 var app = angular.module('myApp', []);
 
+// 實現右鍵單擊功能
 app.directive('ngRightClick', function($parse) {
 	return function(scope, element, attrs) {
 		var fn = $parse(attrs.ngRightClick);
@@ -15,7 +16,8 @@ app.directive('ngRightClick', function($parse) {
 });
 
 app.controller('controller', function($scope, $timeout) {
-	console.log("12:00");
+	// 確認更新用
+	console.log("13:00");
 
 	$scope.cookieLs = $.cookie();
 	$scope.$watch('cookieLs', function(newValue, oldValue) {
@@ -34,6 +36,7 @@ app.controller('controller', function($scope, $timeout) {
 	// $.removeCookie('zxc');
 	// };
 
+	// 踩地雷邏輯
 	var myCountTime;
 	$scope.gameStart = function(chooseDifficulty) {
 		// 時間清除
