@@ -1,54 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="BIG5">
-<title>Insert title here</title>
-</head>
-<body>
-	<script type="text/javascript">
-		function doGet(e) {
-
-			var params = e.parameter;
-			// ¥i¥H°w¹ï§A±a¤Jªº¸ê®ÆÅÜ¤Æ  params.xxxxxx      xxxxx = §A±a¶i¨Óªºkey­È  
-			var name = params.name;
-			var phone = params.phone;
-			var time = params.time;
-			var price = params.price;
-			var order = params.order;
-
-			//±NSheet«ü©w¬°"¸ê®Æ®w"¸Õºâªí   SpreadSheet = ¸Õºâªí ¡A¶K¤Wexcel¨º¬q°Ñ¼Æ
-			var SpreadSheet = SpreadsheetApp.openById("1MySGNMPkZHBUUYSB6naqbT0ULPujfzRbLHJEuM1f0Ss");
-			//¨ú±o­¶ÅÒ:"¤u§@ªí1"              
-			//Sheet = ­¶ÅÒ
-			var Sheet = SpreadSheet.getSheets()[0];
-			//¨ú±o¦³¸ê®Æªº³Ì«á¤@¦æªº"¦æ¼Æ"(¥Øªº­n¦b³Ì«á¤@¦æ´¡¤J·s¸ê®Æ)
-			var LastRow = Sheet.getLastRow();
-
-			// This represents ALL the data
-			var range = Sheet.getRange(LastRow, 6);
-
-			// ­q³æ½s¸¹©¹«á+1 
-			var orderNum = parseFloat(range.getValues()) + 1;
-			//²Ä¤@µ§­q³æ »İ­nÂà¬°1
-			if (LastRow == 1) {
-				orderNum = 1;
-			}
-
-			//--¶}©l¼g¤J¸ê®Æ--  ¾×¦í¨S¶ñ®É¶¡ ¤£µ¹¼g¤J¸ê®Æ¡A¨¾¤î³Q¶Ã¼²api
-			if (time !== undefined) {
-				//¦b³Ì«á¤@¦æªº¤U¤@¦æ¼g¤J¸ê®Æ
-				Sheet.getRange(LastRow + 1, 1).setValue(name);
-				Sheet.getRange(LastRow + 1, 2).setValue(phone);
-				Sheet.getRange(LastRow + 1, 3).setValue(time);
-				Sheet.getRange(LastRow + 1, 4).setValue(order);
-				Sheet.getRange(LastRow + 1, 5).setValue(price);
-				Sheet.getRange(LastRow + 1, 6).setValue(orderNum);
-				return ContentService.createTextOutput(true);
-			}
-
-			// ³Q¶Ã¼² ·|¦^¦R³o¬q¤å¦rµ¹«eºİ
-			return ContentService.createTextOutput('§O¶Ã¼²§Ú£«£«£« :)');
-		}
-	</script>
-</body>
-</html>
+<div class="card border-secondary">
+	<div class="card-body text-secondary">
+		<h5 class="card-title">
+			é€™å€‹æ˜¯å¤–éƒ¨çš„ HTML
+			<a target="_blank" href="https://drv.tw/">DriveToWeb</a>
+		</h5>
+		<p class="card-text">DriveToWeb é€™å€‹æœå‹™èƒ½è®“å…è²»çš„é›²ç«¯å„²å­˜ç©ºé–“è®Šæˆå¯è¨—ç®¡ HTML éœæ…‹ç¶²é æª”æ¡ˆçš„ä¸»æ©Ÿç©ºé–“ï¼Œä¸¦ä¸”å¯ä»¥ç›´æ¥èˆ‡ä½ æ“æœ‰çš„è‡ªè¨‚ç¶²å€çµåˆï¼Œè®“ä½ ä¸å¿…èŠ±éŒ¢ç§Ÿç”¨ä¸»æ©Ÿï¼Œç«‹å³æ“æœ‰ä¸€å€‹æœ‰è‡ªè¨‚ç¶²å€çš„ HTML éœæ…‹é é¢ç¶²ç«™ã€‚</p>
+	</div>
+	<div class="card-footer bg-transparent border-secondary">Footer</div>
+</div>
