@@ -19,23 +19,46 @@ app.controller('controller', function($scope, $timeout) {
 	// 確認更新用
 	console.log("13:00");
 
-	$scope.cookieLs = $.cookie();
-	$scope.$watch('cookieLs', function(newValue, oldValue) {
-		console.log(newValue);
+	// --------------------------------------------------------------------------------------------
+	// Cookie練習區
+	// $.removeCookie('aaa');
+
+	$scope.jsCookieLs = $.cookie();
+
+	$scope.$watch('jsCookieLs', function(newValue, oldValue) {
+		$scope.cookieLs = [];
+		angular.forEach($scope.jsCookieLs, function(value, key) {
+			$scope.cookieLs.push({
+				key : key,
+				chooseDifficulty : value.split(",")[0].substring(17),
+				gameTime : Number(value.split(",")[1].substring(9))
+			});
+		});
 	});
+
 	// 要將alert改掉。 TODO
 
 	// 存入cookies (務必不要使用chrome，chrome不會儲存本地cookies)
 	$scope.setCookie = function(cookieKey, gameTime, chooseDifficulty) {
-		var cookieVelue = gameTime + ',' + chooseDifficulty;
-		$.cookie(cookieKey, cookieVelue);
-		// TODO 更新畫面
+		var day = new Date();
+		console.log(day);
+		console.log('day', day.getDay());
+		console.log('Month', day.getMonth());
+		var cookieVelue = 'chooseDifficulty=' + chooseDifficulty + ',' + 'gameTime=' + gameTime;
+		$.cookie(cookieKey + ',' + day.getTime(), cookieVelue, {
+			'expires' : 365
+		});
+		$scope.jsCookieLs = $.cookie();
 	};
 
-	// $scope.removerCookie = function(cookieKey) {
-	// $.removeCookie('zxc');
-	// };
+	$scope.removeCookie = function() {
+		angular.forEach($scope.cookieLs, function(b) {
+			$.removeCookie(b.key);
+		});
+		$scope.jsCookieLs = $.cookie();
+	};
 
+	// --------------------------------------------------------------------------------------------
 	// 踩地雷邏輯
 	var myCountTime;
 	$scope.gameStart = function(chooseDifficulty) {

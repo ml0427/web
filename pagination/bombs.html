@@ -10,12 +10,19 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <!-- 最新的 Bootstrap 核心 JavaScript 文件-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+<!-- 由於找不到可用的angularJS cookies，所以使用JQ的cookies -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="../js/bombs.js"></script>
 <style>
+.bomb_div {
+	width: 800px;
+	height: 500px;
+}
+
 .button_style, td {
 	width: 26px;
 	height: 26px;
@@ -115,7 +122,7 @@
 				</div>
 			</div>
 			<div class="col-md-9">
-				<div class="row justify-content-center">
+				<div class="row justify-content-center bomb_div">
 					<table>
 						<tr data-ng-repeat="row in arrayLsLs track by $index">
 							<td data-ng-repeat="cell in row track by $index">
@@ -143,33 +150,23 @@
 			<input class="form-control" data-ng-model="user.name" type="text">
 			<button class="btn btn-primary" type="submit" data-ng-click="setCookie(user.name,parameter.gameTime,chooseDifficulty)">存入</button>
 		</div>
-
 		<div class="dropdown-divider"></div>
+		<button class="btn btn-primary" type="submit" data-ng-click="removeCookie()">刪除所有紀錄</button>
 		<div class="row clearfix">
 			<div class="col-md-4">
 				<table class="table table-success table-striped">
 					<thead>
 						<tr>
 							<th class="col-md-4">初級</th>
-							<th>名稱</th>
-							<th>時間</th>
+							<th>日期</th>
+							<th>完成時間</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th>1</th>
-							<td>Mark</td>
-							<td>Otto</td>
-						</tr>
-						<tr>
-							<th>2</th>
-							<td>Jacob</td>
-							<td>Thornton</td>
-						</tr>
-						<tr>
-							<th>3</th>
-							<td>Larry</td>
-							<td>the Bird</td>
+						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:3}">
+							<th>{{cookie.key.split(",")[0]}}</th>
+							<td>{{cookie.key.split(",")[1]}}</td>
+							<td>{{cookie.gameTime}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -179,25 +176,15 @@
 					<thead>
 						<tr>
 							<th class="col-md-4">中級</th>
-							<th>First</th>
-							<th>Last</th>
+							<th>日期</th>
+							<th>完成時間</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th>1</th>
-							<td>Mark</td>
-							<td>Otto</td>
-						</tr>
-						<tr>
-							<th>2</th>
-							<td>Jacob</td>
-							<td>Thornton</td>
-						</tr>
-						<tr>
-							<th>3</th>
-							<td>Larry</td>
-							<td>the Bird</td>
+						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:2} ">
+							<th>{{cookie.key.split(",")[0]}}</th>
+							<td>{{cookie.key.split(",")[1]}}</td>
+							<td>{{cookie.gameTime}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -207,25 +194,15 @@
 					<thead>
 						<tr>
 							<th class="col-md-4">高級</th>
-							<th>First</th>
-							<th>Last</th>
+							<th>日期</th>
+							<th>完成時間</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th>1</th>
-							<td>Mark</td>
-							<td>Otto</td>
-						</tr>
-						<tr>
-							<th>2</th>
-							<td>Jacob</td>
-							<td>Thornton</td>
-						</tr>
-						<tr>
-							<th>3</th>
-							<td>Larry</td>
-							<td>the Bird</td>
+						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:1} ">
+							<th>{{cookie.key.split(",")[0]}}</th>
+							<td>{{cookie.key.split(",")[1]}}</td>
+							<td>{{cookie.gameTime}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -256,5 +233,11 @@
 			</div>
 		</div>
 	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 </body>
 </html>
