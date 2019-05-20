@@ -42,9 +42,7 @@ app.controller('controller', function($scope, $timeout) {
 	$scope.setCookie = function(cookieKey, gameTime, chooseDifficulty) {
 		var day = new Date();
 		console.log(day);
-		console.log('day', day.getDay());
-		console.log('Month', day.getMonth());
-		var cookieVelue = 'chooseDifficulty=' + chooseDifficulty + ',' + 'gameTime=' + gameTime;
+		var cookieVelue = 'chooseDifficulty=' + chooseDifficulty + ',' + 'gameTime=' + gameTime.toFixed(2);
 		$.cookie(cookieKey + ',' + day.getTime(), cookieVelue, {
 			'expires' : 365
 		});
@@ -75,7 +73,7 @@ app.controller('controller', function($scope, $timeout) {
 			y : 0
 		};
 		// 計時
-		myCountTime = $timeout($scope.countTime, 1000);
+		myCountTime = $timeout($scope.countTime, 10);
 		// 難度設定
 		$scope.difficulty(chooseDifficulty);
 		// 製造地圖
@@ -132,9 +130,9 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 計時器
 	$scope.countTime = function() {
-		$scope.parameter.gameTime++;
-		myCountTime = $timeout($scope.countTime, 1000);
-		console.log($scope.parameter.gameTime + "秒");
+		$scope.parameter.gameTime = $scope.parameter.gameTime + 0.01;
+		myCountTime = $timeout($scope.countTime, 10);
+		// console.log($scope.parameter.gameTime + "秒");
 	};
 
 	// 製造地圖
@@ -346,7 +344,7 @@ app.controller('controller', function($scope, $timeout) {
 	$scope.goodGame = function() {
 		$scope.test = true;
 		$timeout.cancel(myCountTime);
-		alert("花了" + $scope.parameter.gameTime + "秒，賽道的拉");
+		alert("花了" + $scope.parameter.gameTime.toFixed(2) + "秒，賽道的拉");
 	};
 
 	// 死亡
