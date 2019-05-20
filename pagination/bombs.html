@@ -160,14 +160,14 @@
 							<td colspan="3">初級</td>
 						</tr>
 						<tr>
-							<th class="col-md-1">名稱</th>
-							<th class="col-md-2">日期</th>
-							<th class="col-md-1">完成時間</th>
+							<th>名稱</th>
+							<th>日期</th>
+							<th>完成時間</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:3}">
-							<th>{{cookie.key.split(",")[0]}}</th>
+							<td>{{cookie.key.split(",")[0]}}</td>
 							<td>{{cookie.key.split(",")[1]}}</td>
 							<td>{{cookie.gameTime}}</td>
 						</tr>
@@ -185,7 +185,7 @@
 					</thead>
 					<tbody>
 						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:2} ">
-							<th>{{cookie.key.split(",")[0]}}</th>
+							<td>{{cookie.key.split(",")[0]}}</td>
 							<td>{{cookie.key.split(",")[1]}}</td>
 							<td>{{cookie.gameTime}}</td>
 						</tr>
@@ -203,7 +203,7 @@
 					</thead>
 					<tbody>
 						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:1} ">
-							<th>{{cookie.key.split(",")[0]}}</th>
+							<td>{{cookie.key.split(",")[0]}}</td>
 							<td>{{cookie.key.split(",")[1]}}</td>
 							<td>{{cookie.gameTime}}</td>
 						</tr>
