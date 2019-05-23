@@ -17,14 +17,14 @@ app.directive('ngRightClick', function($parse) {
 
 app.controller('controller', function($scope, $timeout) {
 	// 確認更新用
-	console.log("13:00");
-
+	console.log("13:30");
+	// 要將alert改掉。 TODO
 	// --------------------------------------------------------------------------------------------
-	// Cookie練習區
-	// $.removeCookie('aaa');
 
+	// 取得cookie
 	$scope.jsCookieLs = $.cookie();
 
+	// 若jsCookieLs改變，則將jsCookieLs內資料重新組裝為cookieLs
 	$scope.$watch('jsCookieLs', function(newValue, oldValue) {
 		$scope.cookieLs = [];
 		angular.forEach($scope.jsCookieLs, function(value, key) {
@@ -35,8 +35,6 @@ app.controller('controller', function($scope, $timeout) {
 			});
 		});
 	});
-
-	// 要將alert改掉。 TODO
 
 	// 存入cookies (務必不要使用chrome，chrome不會儲存本地cookies)
 	$scope.setCookie = function(cookieKey, gameTime, chooseDifficulty) {
@@ -49,6 +47,7 @@ app.controller('controller', function($scope, $timeout) {
 		$scope.jsCookieLs = $.cookie();
 	};
 
+	// 刪除所有Cookie
 	$scope.removeCookie = function() {
 		angular.forEach($scope.cookieLs, function(b) {
 			$.removeCookie(b.key);
@@ -56,8 +55,7 @@ app.controller('controller', function($scope, $timeout) {
 		$scope.jsCookieLs = $.cookie();
 	};
 
-	// --------------------------------------------------------------------------------------------
-	// 踩地雷邏輯
+	// 踩地雷邏輯--------------------------------------------------------------------------------------------
 	var myCountTime;
 	$scope.gameStart = function(chooseDifficulty) {
 		// 時間清除
