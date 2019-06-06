@@ -1,13 +1,7 @@
-var app = angular.module("app", [ 'eAlert', 'ui.bootstrap.modal', 'ui.bootstrap.tpls', 'ngSanitize' ]);
+var app = angular.module("app", []);
 
-app.controller('controller', function($scope, eAlert) {
+app.controller('controller', function($scope) {
 
-	console.log(">>>controller");
-	var a = eAlert.alert("test", function() {
-
-	});
-
-	console.log(a);
 });
 
-// https://embed.plnkr.co/plunk/XZOXbZ < modal範例
+
