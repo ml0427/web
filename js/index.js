@@ -4,7 +4,7 @@ app.controller('controller', function($scope, eAlert, $modal) {
 
 	console.log(">>>controller");
 	$modal.open({
-		templateUrl : 'web/pagination/common/eAlert.html',
+		templateUrl : 'pagination/common/eAlert.html',
 		controller : 'eAlertController',
 		size : 'sm',
 	});
