@@ -2,11 +2,11 @@
 <meta charset="UTF-8">
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 <div class="modal-header">
-	<span th:text="#{common.modal.systemMessage}"></span>
+	<span>系統訊息</span>
 </div>
 <div id="e-alert" class="modal-body" data-ng-bind-html="message"></div>
 <div class="modal-footer">
-	<button type="button" class="btn btn-primary" data-ng-click="confirm()" th:text="#{common.action.determine}"></button>
+	<button type="button" class="btn btn-primary" data-ng-click="confirm()">確認</button>
 </div>
 <style>
 #e-alert > p {
