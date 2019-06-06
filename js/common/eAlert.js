@@ -28,6 +28,8 @@
 
 	module.controller('eAlertController', function($scope, $modalInstance, message) {
 
+		console.log(">>>eAlertController");
+
 		$scope.message = message;
 
 		$scope.confirm = function() {
