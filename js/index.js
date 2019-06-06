@@ -1,4 +1,4 @@
-var app = angular.module("app", [ 'eAlert', 'ui.bootstrap' ]);
+var app = angular.module("app", [ 'eAlert', 'ui.bootstrap', 'ngSanitize' ]);
 
 app.controller('controller', function($scope, eAlert) {
 
