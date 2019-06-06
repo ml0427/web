@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<div class="modal-header">
+	<span th:text="#{common.modal.systemMessage}"></span>
+</div>
+<div id="e-alert" class="modal-body" data-ng-bind-html="message"></div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-ng-click="confirm()" th:text="#{common.action.determine}"></button>
+</div>
+<style>
+#e-alert > p {
+	text-align: justify;
+}
+</style>
+</html>

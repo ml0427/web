@@ -1,4 +1,4 @@
-var app = angular.module('myApp', []);
+var app = angular.module("app", ['eAlert']);
 
 // 實現右鍵單擊功能
 app.directive('ngRightClick', function($parse) {
@@ -15,12 +15,13 @@ app.directive('ngRightClick', function($parse) {
 	};
 });
 
-app.controller('controller', function($scope, $timeout) {
+app.controller('controller', function($scope, $timeout, eAlert) {
 	// 確認更新用
 	console.log("13:30");
 	// 要將alert改掉。 TODO
 	// --------------------------------------------------------------------------------------------
-
+	// eAlert.alert('test', function() {
+	// });
 	// 取得cookie
 	$scope.jsCookieLs = $.cookie();
 
@@ -39,7 +40,7 @@ app.controller('controller', function($scope, $timeout) {
 	// 存入cookies (務必不要使用chrome，chrome不會儲存本地cookies)
 	$scope.setCookie = function(cookieKey, gameTime, chooseDifficulty) {
 		var day = new Date();
-		console.log(day);
+		// console.log(day);
 		var cookieVelue = 'chooseDifficulty=' + chooseDifficulty + ',' + 'gameTime=' + gameTime.toFixed(2);
 		$.cookie(cookieKey + ',' + day.getTime(), cookieVelue, {
 			'expires' : 365
