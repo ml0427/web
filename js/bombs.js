@@ -1,4 +1,4 @@
-var app = angular.module("app", ['eAlert']);
+var app = angular.module("app", [ 'eAlert', 'ui.bootstrap' ]);
 
 // 實現右鍵單擊功能
 app.directive('ngRightClick', function($parse) {
