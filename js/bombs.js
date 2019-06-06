@@ -1,4 +1,4 @@
-var app = angular.module("app", [ 'eAlert', 'ui.bootstrap.modal' ]);
+var app = angular.module("app", []);
 
 // 實現右鍵單擊功能
 app.directive('ngRightClick', function($parse) {
@@ -15,7 +15,7 @@ app.directive('ngRightClick', function($parse) {
 	};
 });
 
-app.controller('controller', function($scope, $timeout, eAlert) {
+app.controller('controller', function($scope, $timeout) {
 	// 確認更新用
 	console.log("13:30");
 	// 要將alert改掉。 TODO
