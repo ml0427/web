@@ -5,7 +5,7 @@
 		return {
 			alert : function(message, onFinish) {
 				$modal.open({
-					templateUrl : '../../pagination/common/eAlert.html',
+					templateUrl : '../pagination/common/eAlert.html',
 					controller : 'eAlertController',
 					size : 'sm',
 					resolve : {
