@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>數獨</title>
+
+<!-- angularJS -->
+<script src="../js/frame/angular_1.4.6.js"></script>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="../css/bootstrap_4.3.1.css">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件-->
+<script src="../js/frame/jquery-3.3.1.slim.js"></script>
+<script src="../js/frame/popper_1.14.7.js"></script>
+<script src="../js/frame/bootstrap_4.3.1.js"></script>
+<!-- 由於找不到可用的angularJS cookies，所以使用JQ的cookies -->
+<script src="../js/frame/jquery.cookie_1.4.1.js"></script>
+<script type="text/javascript" src="../js/sudoku.js"></script>
+
+<style type="text/css">
+.alert {
+	position: relative;
+	padding: 0.75rem 1.25rem;
+	margin-bottom: 0rem;
+	border-radius: 0.25rem;
+}
+</style>
+
+</head>
+<body data-ng-app="app" data-ng-controller="controller">
+	<button class="btn btn-primary" type="submit" data-ng-click="sudokuStart()">測試</button>
+	<div class="container">
+		<div class="row">
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+
+			<div class="w-100"></div>
+
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+			<div class="w-100"></div>
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+			<div class="col alert alert-dark">
+				<div class="row">
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+					<div class="w-100"></div>
+					<div class="col alert alert-dark">1 of 3</div>
+					<div class="col alert alert-dark">2 of 3</div>
+					<div class="col alert alert-dark">3 of 3</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
