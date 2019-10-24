@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>練習踩地雷</title>
+<!-- angularJS -->
+<script src="../js/frame/angular_1.4.6.js"></script>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="../css/bootstrap_4.3.1.css">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件-->
+<script src="../js/frame/jquery-3.3.1.slim.js"></script>
+<script src="../js/frame/popper_1.14.7.js"></script>
+<script src="../js/frame/bootstrap_4.3.1.js"></script>
+<!-- 由於找不到可用的angularJS cookies，所以使用JQ的cookies -->
+<script src="../js/frame/jquery.cookie_1.4.1.js"></script>
+
+<script type="text/javascript" src="../js/bombs.js"></script>
+<style>
+.button_style, td {
+	width: 26px;
+	height: 26px;
+	margin-bottom: 0;
+	padding: 0;
+}
+
+.button_div {
+	background-color: silver;
+	height: 22px;
+}
+
+.button_div_open {
+	height: 22px;
+	background: white;
+}
+
+.button_div_banner {
+	height: 22px;
+	background: green;
+}
+
+.button_div_bomb {
+	height: 22px;
+	background: red;
+}
+
+.table_center {
+	margin: auto;
+}
+</style>
+</head>
+
+<!-- 禁止滑鼠右鍵、選取功能 onmouseover="window.status='';return true;" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" -->
+<body data-ng-app="app" data-ng-controller="controller">
+	<div onmouseover="window.status='';return true;" ondragstart="window.event.returnValue=false" oncontextmenu="window.event.returnValue=false" onselectstart="event.returnValue=false" class="container">
+		<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
+		<div data-ng-include="'../common/header.html'"></div>
+		<!-- 踩地雷 -->
+		<div class="row clearfix">
+			<div class="col-md-3">
+				<!-- 按鈕下拉選單 -->
+				<div class="container">
+					<div class="alert alert-secondary">
+						<select class="custom-select" id="chooseDifficulty" data-ng-model="chooseDifficulty">
+							<option value="">請選擇</option>
+							<option value="1">高級</option>
+							<option value="2">中級</option>
+							<option value="3">初級</option>
+							<option value="4">自訂</option>
+						</select>
+					</div>
+				</div>
+				<div class="container">
+					<div data-ng-show="chooseDifficulty==4">
+						<div class="alert alert-secondary" role="alert">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<samp class="input-group-text">X軸 </samp>
+								</div>
+								<input class="form-control" id="x" data-ng-model="userIn.x" type="text" value="{{userIn.x}}" title="x">
+							</div>
+						</div>
+						<div class="alert alert-secondary" role="alert">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<samp class="input-group-text">Y軸</samp>
+								</div>
+								<input class="form-control" id="y" data-ng-model="userIn.y" type="text" value="{{userIn.y}}" title="y">
+							</div>
+						</div>
+						<div class="alert alert-secondary" role="alert">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<samp class="input-group-text">炸彈</samp>
+								</div>
+								<input class="form-control" id="bombNb" data-ng-model="userIn.bombAllNb" type="text" value="{{userIn.bombAllNb}}" title="y">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div data-ng-if="arrayLsLs">
+						<div class="alert alert-secondary" role="alert">
+							<samp>經過秒數</samp>
+							<samp id="gameTime" data-ng-model="parameter.gameTime">{{parameter.gameTime | number:2}}</samp>
+						</div>
+						<div class="alert alert-secondary" role="alert">
+							<samp>剩餘炸彈</samp>
+							<samp id="gameTime" data-ng-model="parameter.remainBombNb">{{parameter.remainBombNb}}</samp>
+						</div>
+					</div>
+					<div class="col-md-auto">
+						<button class="btn btn-primary" type="submit" data-ng-click="gameStart(chooseDifficulty)" data-ng-disabled="!chooseDifficulty">遊戲開始</button>
+						<button class="btn btn-primary" type="submit" data-ng-click="gameStart(0)" data-ng-disabled="!chooseDifficulty">重新選擇</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="row justify-content-center">
+					<table>
+						<tr data-ng-repeat="row in arrayLsLs track by $index">
+							<td data-ng-repeat="cell in row track by $index">
+								<button class="button_style" type="button" data-ng-click="leftClick($parent.$index, $index)" data-ng-right-click="rightClick($parent.$index ,$index)">
+									<!-- 按下按鈕 && 炸彈計算數不為0 -->
+									<div data-ng-if="cell.open && cell.bombNb != 0 " data-ng-class="{button_div_open : !cell.isbomb, button_div_bomb : cell.isbomb}">{{cell.bombNb}}</div>
+									<!-- 按下按鈕 && 炸彈計算數為0 -->
+									<div data-ng-if="cell.open && cell.bombNb == 0" class="button_div_open">&nbsp;</div>
+									<!-- 未按下按鈕===> 插旗判斷顏色-->
+									<div data-ng-if="!cell.open" data-ng-class="{button_div : !cell.banner, button_div_banner : cell.banner}">&nbsp;</div>
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="dropdown-divider"></div>
+
+		<div data-ng-if="test" class="input-group">
+			<div class="input-group-prepend">
+				<samp class="input-group-text">輸入名稱</samp>
+			</div>
+			<input class="form-control" data-ng-model="user.name" type="text">
+			<button class="btn btn-primary" type="submit" data-ng-click="setCookie(user.name,parameter.gameTime,chooseDifficulty)">存入</button>
+		</div>
+		<div class="dropdown-divider"></div>
+		<button class="btn btn-primary" type="submit" data-ng-click="removeCookie()">刪除所有紀錄</button>
+		<div class="dropdown-divider"></div>
+		<div class="row clearfix">
+			<div class="col-md-4">
+				<table class="table table-success table-striped">
+					<thead>
+						<tr>
+							<td colspan="3">初級</td>
+						</tr>
+						<tr>
+							<th>名稱</th>
+							<th>完成時間</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:3}">
+							<td>{{cookie.key.split(",")[0]}}</td>
+							<td>{{cookie.gameTime}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-4">
+				<table class="table table-warning table-striped">
+					<thead>
+						<tr>
+							<td colspan="3">中級</td>
+						</tr>
+						<tr>
+							<th>名稱</th>
+							<th>完成時間</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:2} ">
+							<td>{{cookie.key.split(",")[0]}}</td>
+							<td>{{cookie.gameTime}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-4">
+				<table class="table table-danger table-striped">
+					<thead>
+						<tr>
+							<td colspan="3">高級</td>
+						</tr>
+						<tr>
+							<th>名稱</th>
+							<th>完成時間</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="cookie in cookieLs | orderBy:'gameTime' | limitTo:5 | filter:{chooseDifficulty:1} ">
+							<td>{{cookie.key.split(",")[0]}}</td>
+							<td>{{cookie.gameTime}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="fixed-bottom">
+		<div class="accordion" id="accordionExample">
+			<div class="card">
+				<div class="card-header" id="headingOne">
+					<h2 class="mb-0">
+						<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">補充說明</button>
+					</h2>
+				</div>
+
+				<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+					<div class="alert alert-primary">
+						<samp>主要使用技術：angularJs</samp>
+						<br>
+						<samp>為了遊戲體驗，將滑鼠的右鍵、選取功能禁止(這邊可以按右鍵)</samp>
+						<br>
+						<samp>
+							資料參考: <a href="http://mirlab.org/jang/books/javascript/webContentProtection.asp?title=11-2%20%BA%F4%AD%B6%A4%BA%AEe%ABO%C5%40">網頁內容保護</a>
+						</samp>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>arkanoid</title>
+<style>
+canvas {
+	background: #eee;
+}
+</style>
+<!-- angularJS -->
+<script src="../js/frame/angular_1.4.6.js"></script>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="../css/bootstrap_4.3.1.css">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件-->
+<script src="../js/frame/jquery-3.3.1.slim.js"></script>
+<script src="../js/frame/popper_1.14.7.js"></script>
+<script src="../js/frame/bootstrap_4.3.1.js"></script>
+</head>
+<body data-ng-app="app">
+	<div class="container">
+		<!-- 標題列，但是無法直接開啟檔案看結果，必須從localhost訪問才行 -->
+		<div data-ng-include="'../common/header.html'"></div>
+
+		<div class="row clearfix">
+			<div class="col-md-12 ">
+				<p>由於是去網路上找的範例，很多部分都還可以再優化，大致上初步了解canvas畫出動畫的流程了。</p>
+				<p>我是設定沒有結束方法，就像在螢幕保護程式看著他跑還蠻療癒的(X)浪費時間(O)</p>
+			</div>
+			<canvas id="myCanvas" width="480" height="210" style="margin: auto;"></canvas>
+		</div>
+
+		<div class="fixed-bottom">
+			<div class="accordion" id="accordionExample">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+						<h2 class="mb-0">
+							<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">補充說明</button>
+						</h2>
+					</div>
+					<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+						<div class="alert alert-primary">
+							<samp>
+								資料參考:<a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript">2D breakout game using pure JavaScript </a>
+							</samp>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/arkanoid.js"></script>
+	</div>
+</body>
+</html>
