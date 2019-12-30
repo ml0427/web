@@ -1,21 +1,21 @@
 var app = angular.module("app", []);
 
 // 實現右鍵單擊功能
-app.directive('ngRightClick', function($parse) {
-	return function(scope, element, attrs) {
+app.directive('ngRightClick', function ($parse) {
+	return function (scope, element, attrs) {
 		var fn = $parse(attrs.ngRightClick);
-		element.bind('contextmenu', function(event) {
-			scope.$apply(function() {
+		element.bind('contextmenu', function (event) {
+			scope.$apply(function () {
 				event.preventDefault();
 				fn(scope, {
-					$event : event
+					$event: event
 				});
 			});
 		});
 	};
 });
 
-app.controller('controller', function($scope, $timeout) {
+app.controller('controller', function ($scope, $timeout) {
 	// 確認更新用
 	console.log("13:30");
 	// 要將alert改掉。 TODO
@@ -26,31 +26,31 @@ app.controller('controller', function($scope, $timeout) {
 	$scope.jsCookieLs = $.cookie();
 
 	// 若jsCookieLs改變，則將jsCookieLs內資料重新組裝為cookieLs
-	$scope.$watch('jsCookieLs', function(newValue, oldValue) {
+	$scope.$watch('jsCookieLs', function (newValue, oldValue) {
 		$scope.cookieLs = [];
-		angular.forEach($scope.jsCookieLs, function(value, key) {
+		angular.forEach($scope.jsCookieLs, function (value, key) {
 			$scope.cookieLs.push({
-				key : key,
-				chooseDifficulty : value.split(",")[0].substring(17),
-				gameTime : Number(value.split(",")[1].substring(9))
+				key: key,
+				chooseDifficulty: value.split(",")[0].substring(17),
+				gameTime: Number(value.split(",")[1].substring(9))
 			});
 		});
 	});
 
 	// 存入cookies (務必不要使用chrome，chrome不會儲存本地cookies)
-	$scope.setCookie = function(cookieKey, gameTime, chooseDifficulty) {
+	$scope.setCookie = function (cookieKey, gameTime, chooseDifficulty) {
 		var day = new Date();
 		// console.log(day);
 		var cookieVelue = 'chooseDifficulty=' + chooseDifficulty + ',' + 'gameTime=' + gameTime.toFixed(2);
 		$.cookie(cookieKey + ',' + day.getTime(), cookieVelue, {
-			'expires' : 365
+			'expires': 365
 		});
 		$scope.jsCookieLs = $.cookie();
 	};
 
 	// 刪除所有Cookie
-	$scope.removeCookie = function() {
-		angular.forEach($scope.cookieLs, function(b) {
+	$scope.removeCookie = function () {
+		angular.forEach($scope.cookieLs, function (b) {
 			$.removeCookie(b.key);
 		});
 		$scope.jsCookieLs = $.cookie();
@@ -58,18 +58,18 @@ app.controller('controller', function($scope, $timeout) {
 
 	// 踩地雷邏輯--------------------------------------------------------------------------------------------
 	var myCountTime;
-	$scope.gameStart = function(chooseDifficulty) {
+	$scope.gameStart = function (chooseDifficulty) {
 		// 時間清除
 		$timeout.cancel(myCountTime);
 		// 地圖初始化
 		$scope.arrayLsLs = [];
 		// 參數初始化
 		$scope.parameter = {
-			gameTime : 0,
-			bombAllNb : 0,
-			remainBombNb : 0,
-			x : 0,
-			y : 0
+			gameTime: 0,
+			bombAllNb: 0,
+			remainBombNb: 0,
+			x: 0,
+			y: 0
 		};
 		// 計時
 		myCountTime = $timeout($scope.countTime, 10);
@@ -86,67 +86,67 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	// 難度
-	$scope.difficulty = function(chooseDifficulty) {
+	$scope.difficulty = function (chooseDifficulty) {
 		console.log("選擇難度");
 		switch (chooseDifficulty) {
-		case '1':
-			$scope.parameter.x = 30;
-			$scope.parameter.y = 16;
-			$scope.parameter.bombAllNb = 99;
-			$scope.parameter.remainBombNb = 99;
-			break;
-		case '2':
-			$scope.parameter.x = 16;
-			$scope.parameter.y = 16;
-			$scope.parameter.bombAllNb = 40;
-			$scope.parameter.remainBombNb = 40;
-			break;
-		case '3':
-			$scope.parameter.x = 9;
-			$scope.parameter.y = 9;
-			$scope.parameter.bombAllNb = 10;
-			$scope.parameter.remainBombNb = 10;
-			break;
-		case '4':
-			$scope.parameter.x = $scope.userIn.x;
-			$scope.parameter.y = $scope.userIn.y;
-			$scope.parameter.bombAllNb = $scope.userIn.bombAllNb;
-			$scope.parameter.remainBombNb = $scope.userIn.bombAllNb;
-			break;
-		default:
-			$scope.chooseDifficulty = '';
-			$scope.parameter.x = 0;
-			$scope.parameter.y = 0;
-			$scope.parameter.bombAllNb = 0;
-			$scope.parameter.remainBombNb = 0;
-			$scope.arrayLsLs = null;
-			$timeout.cancel(myCountTime);
-			break;
+			case '1':
+				$scope.parameter.x = 30;
+				$scope.parameter.y = 16;
+				$scope.parameter.bombAllNb = 99;
+				$scope.parameter.remainBombNb = 99;
+				break;
+			case '2':
+				$scope.parameter.x = 16;
+				$scope.parameter.y = 16;
+				$scope.parameter.bombAllNb = 40;
+				$scope.parameter.remainBombNb = 40;
+				break;
+			case '3':
+				$scope.parameter.x = 9;
+				$scope.parameter.y = 9;
+				$scope.parameter.bombAllNb = 10;
+				$scope.parameter.remainBombNb = 10;
+				break;
+			case '4':
+				$scope.parameter.x = $scope.userIn.x;
+				$scope.parameter.y = $scope.userIn.y;
+				$scope.parameter.bombAllNb = $scope.userIn.bombAllNb;
+				$scope.parameter.remainBombNb = $scope.userIn.bombAllNb;
+				break;
+			default:
+				$scope.chooseDifficulty = '';
+				$scope.parameter.x = 0;
+				$scope.parameter.y = 0;
+				$scope.parameter.bombAllNb = 0;
+				$scope.parameter.remainBombNb = 0;
+				$scope.arrayLsLs = null;
+				$timeout.cancel(myCountTime);
+				break;
 		}
 		if (chooseDifficulty)
 			console.log("選擇" + $('#chooseDifficulty option[value=' + $scope.chooseDifficulty + ']').html() + "難度", "地圖大小為" + $scope.parameter.x * $scope.parameter.y, "炸彈數量為" + $scope.parameter.bombAllNb);
 	};
 
 	// 計時器
-	$scope.countTime = function() {
+	$scope.countTime = function () {
 		$scope.parameter.gameTime = $scope.parameter.gameTime + 0.01;
 		myCountTime = $timeout($scope.countTime, 10);
 		// console.log($scope.parameter.gameTime + "秒");
 	};
 
 	// 製造地圖
-	$scope.createMap = function(parameter) {
+	$scope.createMap = function (parameter) {
 		console.log("製造地圖");
 		for (i = 0; i < parameter.y; i++) {
 			$scope.arrayLsLs[i] = [];
 			for (j = 0; j < parameter.x; j++) {
 				$scope.arrayLsLs[i][j] = {
-					y : i,
-					x : j,
-					bombNb : 0,
-					open : false,
-					banner : false,
-					isbomb : false
+					y: i,
+					x: j,
+					bombNb: 0,
+					open: false,
+					banner: false,
+					isbomb: false
 				};
 			}
 		}
@@ -154,7 +154,7 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	// 製作炸彈地圖
-	$scope.randomBombsMap = function(parameter) {
+	$scope.randomBombsMap = function (parameter) {
 		console.log("製作炸彈地圖");
 		var x = parameter.x;
 		var y = parameter.y;
@@ -177,7 +177,7 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	// 計算週圍炸彈數字
-	$scope.countNumberOfBombs = function(parameter) {
+	$scope.countNumberOfBombs = function (parameter) {
 		console.log("計算週圍炸彈數字");
 		var x = parameter.x;
 		var y = parameter.y;
@@ -249,7 +249,7 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	// 檢查地圖&&開圖
-	$scope.statusCheck = function() {
+	$scope.statusCheck = function () {
 		console.log("檢查地圖&&開圖");
 		do {
 			var isChecking = false;
@@ -259,6 +259,7 @@ app.controller('controller', function($scope, $timeout) {
 					// 如果已開且是炸彈，則死亡
 					if ($scope.arrayLsLs[i][j].open && $scope.arrayLsLs[i][j].isbomb) {
 						$scope.die();
+						return;
 					}
 					// 如果狀態未開，而且裡面不是炸彈的話，遊戲尚未結束
 					if (!$scope.arrayLsLs[i][j].open && !$scope.arrayLsLs[i][j].isbomb && $scope.allOpen) {
@@ -340,14 +341,14 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	// 成功完成遊戲
-	$scope.goodGame = function() {
-		$scope.test = true;
+	$scope.goodGame = function () {
+		$scope.over = true;
 		$timeout.cancel(myCountTime);
 		alert("花了" + $scope.parameter.gameTime.toFixed(2) + "秒，賽道的拉");
 	};
 
 	// 死亡
-	$scope.die = function() {
+	$scope.die = function () {
 		// 地圖全開
 		for (var i = 0; i < $scope.arrayLsLs.length; i++) {
 			for (var j = 0; j < $scope.arrayLsLs[0].length; j++) {
@@ -356,11 +357,13 @@ app.controller('controller', function($scope, $timeout) {
 			}
 		}
 		$timeout.cancel(myCountTime);
+
+
 		alert("you are die");
 	};
 
 	// 計算炸彈剩餘數量
-	$scope.countRemainBombNb = function(y, x) {
+	$scope.countRemainBombNb = function (y, x) {
 		if (!$scope.arrayLsLs[y][x].open) {
 			if (!$scope.arrayLsLs[y][x].banner) {
 				$scope.parameter.remainBombNb--;
@@ -372,7 +375,7 @@ app.controller('controller', function($scope, $timeout) {
 	};
 
 	// 雙鍵功能
-	$scope.leftAndRightClick = function(j, i) {
+	$scope.leftAndRightClick = function (j, i) {
 		console.log("計算旗幟數量");
 		// 計算旗幟數量
 		var bannerNB = 0;
@@ -462,7 +465,7 @@ app.controller('controller', function($scope, $timeout) {
 		}
 	};
 
-	$scope.rightClick = function(y, x) {
+	$scope.rightClick = function (y, x) {
 		$scope.countRemainBombNb(y, x);
 		if (!$scope.arrayLsLs[y][x].open) {
 			$scope.arrayLsLs[y][x].banner = !$scope.arrayLsLs[y][x].banner;
@@ -473,7 +476,7 @@ app.controller('controller', function($scope, $timeout) {
 		console.log("按了右鍵", "位置", x, y);
 	};
 
-	$scope.leftClick = function(y, x) {
+	$scope.leftClick = function (y, x) {
 		if (!$scope.arrayLsLs[y][x].banner) {
 			$scope.arrayLsLs[y][x].open = true;
 			// 開到地雷
