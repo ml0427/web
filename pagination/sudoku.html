@@ -1,48 +1,776 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 
 <head>
 	<meta charset="UTF-8">
-	<title>數獨</title>
-	<!-- angularJS -->
-	<script src="../js/frame/angular_1.4.6.js"></script>
-	<!-- 新 Bootstrap 核心 CSS 文件 -->
-	<link rel="stylesheet" href="../css/bootstrap_4.3.1.css">
-	<!-- 最新的 Bootstrap 核心 JavaScript 文件-->
-	<script src="../js/frame/jquery-3.3.1.slim.js"></script>
-	<script src="../js/frame/popper_1.14.7.js"></script>
-	<script src="../js/frame/bootstrap_4.3.1.js"></script>
-	<!-- 由於找不到可用的angularJS cookies，所以使用JQ的cookies -->
-	<script src="../js/frame/jquery.cookie_1.4.1.js"></script>
-	<script type="text/javascript" src="../js/sudoku.js"></script>
-	<style type="text/css">
-		.button_style,
-		td {
-			width: 26px;
-			height: 26px;
-			margin-bottom: 0;
-			padding: 0;
-		}
-	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>網頁版數獨 (Sudoku)</title>
 </head>
 
-<body data-ng-app="app" data-ng-controller="controller">
-	<button class="btn btn-primary" type="submit" data-ng-click="sudokuStart()">測試</button>
-	<div style="width: 720px; height: 744px;">
-		<input type="text" class="form-control" data-ng-model="test">
-		<table>
-			<tr data-ng-repeat="row in sudokuLs track by $index" data-ng-init="rowIndex = $index">
-				<td data-ng-repeat="column in row track by $index" data-ng-init="columnIndex = $index">
-					<input class="button_style" data-ng-if="column.isImport" type="text"
-						data-ng-model="sudokuLs[rowIndex][columnIndex].answerSudokuLs">
-					<button class="button_style" data-ng-if="!column.isImport" >
-						<div>{{column.answerSudokuLs}}</div>
-					</button>
-					
-				</td>
-			</tr>
-		</table>
+<body>
+
+<header>
+	<h1>數獨 Sudoku</h1>
+</header>
+
+<main>
+	<div class="controls-container">
+		<div class="control-group">
+			<button id="theme-toggle-btn" title="切換主題">
+				<!-- 圖示將由 JS 控制 -->
+			</button>
+		</div>
+		<div class="control-group">
+			<label for="difficulty">難度:</label>
+			<select id="difficulty">
+				<option value="easy">簡單</option>
+				<option value="medium" selected>中等</option>
+				<option value="hard">困難</option>
+			</select>
+		</div>
+		<div class="control-group">
+			<button id="pencil-toggle-btn" title="筆記模式">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+					<path d="m15 5 4 4" />
+				</svg>
+			</button>
+		</div>
+		<div class="control-group">
+			<button id="new-game-btn">新遊戲</button>
+		</div>
+		<div class="control-group">
+			<div id="timer" class="timer">時間: 00:00</div>
+		</div>
 	</div>
+
+	<div id="sudoku-grid" class="sudoku-grid">
+		<!-- 遊戲網格將由 JavaScript 動態生成 -->
+	</div>
+
+	<div id="number-counts" class="number-counts-container">
+		<!-- 數字計數器將由 JavaScript 動態生成 -->
+	</div>
+
+	<div class="high-score-container">
+		<h3>最快紀錄 (<span id="current-difficulty-display">中等</span>)</h3>
+		<div id="high-score">--:--</div>
+	</div>
+</main>
+<style>
+	/* --- 主題化與 CSS 變數 --- */
+    :root {
+        /* 淺色模式 (預設) */
+        --bg-color: #f4f4f4;
+        --main-bg-color: #ffffff;
+        --text-color: #333333;
+        --border-color: #cccccc;
+        --border-thick-color: #555555;
+        --selected-bg-color: #d4e3ff;
+        --given-text-color: #333333;
+        --user-text-color: #005a9c;
+        --error-text-color: #D8000C;
+        --highlight-same-bg-color: #fffacd;
+        --pencil-text-color: #666666;
+        --given-cell-bg-color: #efefef;
+        --number-count-bg-color: #f0f0f0;
+        --number-count-completed-bg-color: #e0e0e0;
+        --button-bg-color: #fff;
+        --button-active-bg-color: var(--selected-bg-color);
+    }
+
+    body.dark-mode {
+        /* 深色模式 */
+        --bg-color: #121212;
+        --main-bg-color: #1e1e1e;
+        --text-color: #e0e0e0;
+        --border-color: #444;
+        --border-thick-color: #888;
+        --selected-bg-color: #2a4168;
+        --given-text-color: #e0e0e0;
+        --user-text-color: #87cefa;
+        --error-text-color: #ff8a80;
+        --highlight-same-bg-color: #4a4a28;
+        --pencil-text-color: #999;
+        --given-cell-bg-color: #2c2c2c;
+        --number-count-bg-color: #333;
+        --number-count-completed-bg-color: #444;
+        --button-bg-color: #333;
+        --button-active-bg-color: var(--selected-bg-color);
+    }
+
+    /* --- 基本與佈局 --- */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    main {
+        background-color: var(--main-bg-color);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 95%;
+        transition: background-color 0.3s;
+    }
+
+    header h1 {
+        color: var(--border-thick-color);
+        text-align: center;
+    }
+
+    /* --- 控制項 --- */
+    .controls-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 10px;
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    #difficulty,
+    #new-game-btn,
+    #pencil-toggle-btn,
+    #theme-toggle-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: var(--button-bg-color);
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #new-game-btn {
+        background-color: var(--user-text-color);
+        color: white;
+        font-weight: bold;
+        border: none;
+        transition: background-color 0.3s;
+    }
+
+    #new-game-btn:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    #pencil-toggle-btn.active,
+    #theme-toggle-btn.active {
+        background-color: var(--button-active-bg-color);
+        border-color: var(--user-text-color);
+    }
+
+    .timer {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    /* --- 數獨網格 --- */
+    .sudoku-grid {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        grid-template-rows: repeat(9, 1fr);
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+        border: 2px solid var(--border-thick-color);
+        aspect-ratio: 1 / 1;
+    }
+
+    .cell {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: clamp(16px, 4vw, 24px);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .cell:nth-child(3n) {
+        border-right: 2px solid var(--border-thick-color);
+    }
+
+    .cell:nth-child(9n) {
+        border-right: none;
+    }
+
+    .cell:nth-child(n+19):nth-child(-n+27),
+    .cell:nth-child(n+46):nth-child(-n+54) {
+        border-bottom: 2px solid var(--border-thick-color);
+    }
+
+    /* --- 筆記模式樣式 --- */
+    .pencil-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .pencil-mark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: clamp(8px, 2vw, 11px);
+        color: var(--pencil-text-color);
+        visibility: hidden;
+    }
+
+    .pencil-mark.visible {
+        visibility: visible;
+    }
+
+    /* --- 單元格狀態 --- */
+    .cell.selected {
+        background-color: var(--selected-bg-color);
+    }
+
+    .cell .cell-value.given {
+        font-weight: bold;
+        color: var(--given-text-color);
+    }
+
+    .cell .cell-value.user-filled {
+        color: var(--user-text-color);
+        font-weight: 500;
+    }
+
+    .cell .cell-value.error {
+        color: var(--error-text-color);
+    }
+
+    .given-cell,
+    .correct-answer {
+        background-color: var(--given-cell-bg-color);
+        cursor: not-allowed;
+    }
+
+    .cell.highlight-same-number {
+        background-color: var(--highlight-same-bg-color);
+    }
+
+    /* --- 數字剩餘數量提示 --- */
+    .number-counts-container {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .number-count-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        background-color: var(--number-count-bg-color);
+        font-weight: bold;
+        transition: opacity 0.3s, background-color 0.3s;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+    }
+
+    .number-count-item .number {
+        font-size: 1.2em;
+        color: var(--user-text-color);
+    }
+
+    .number-count-item .count {
+        font-size: 0.7em;
+        color: var(--pencil-text-color);
+    }
+
+    .number-count-item.completed {
+        opacity: 0.5;
+        background-color: var(--number-count-completed-bg-color);
+    }
+
+    /* --- 最高分數 --- */
+    .high-score-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #high-score {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: var(--user-text-color);
+    }
+</style>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+
+        // --- DOM 元素 ---
+        const grid = document.getElementById('sudoku-grid');
+        const difficultySelector = document.getElementById('difficulty');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const pencilToggleBtn = document.getElementById('pencil-toggle-btn');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn'); // 新增
+        const timerDisplay = document.getElementById('timer');
+        const highScoreDisplay = document.getElementById('high-score');
+        const difficultyDisplay = document.getElementById('current-difficulty-display');
+        const numberCountsContainer = document.getElementById('number-counts');
+
+        // --- 遊戲狀態變數 ---
+        let selectedCell = null;
+        let timerInterval = null;
+        let seconds = 0;
+        let currentPuzzle = null;
+        let currentSolution = null;
+        let userBoard = null;
+        let isPencilMode = false;
+        let pencilMarks = [];
+
+        // --- SVG 圖示 ---
+        const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+        const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+
+        // --- 模組一：高品質謎題生成 (保證唯一解) ---
+        class SudokuGenerator {
+            constructor() {
+                this.board = Array(9).fill().map(() => Array(9).fill(0));
+                this.solution = null;
+            }
+            generate(difficulty) {
+                this.board = Array(9).fill().map(() => Array(9).fill(0));
+                this._generateFullSolution();
+                this.solution = this.board.map(row => [...row]);
+                const puzzle = this._createUniquePuzzle(difficulty);
+                return { puzzle, solution: this.solution };
+            }
+            _generateFullSolution() {
+                const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                this._shuffle(numbers);
+                const findEmpty = (board) => {
+                    for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) if (board[r][c] === 0) return [r, c];
+                    return null;
+                };
+                const solve = () => {
+                    const emptySpot = findEmpty(this.board);
+                    if (!emptySpot) return true;
+                    const [row, col] = emptySpot;
+                    for (let i = 0; i < numbers.length; i++) {
+                        if (this._isValid(this.board, numbers[i], row, col)) {
+                            this.board[row][col] = numbers[i];
+                            if (solve()) return true;
+                            this.board[row][col] = 0;
+                        }
+                    }
+                    return false;
+                };
+                solve();
+            }
+            _createUniquePuzzle(difficulty) {
+                let puzzle = this.solution.map(row => [...row]);
+                const holes = { easy: 40, medium: 50, hard: 55 }[difficulty] || 50;
+                const positions = [];
+                for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) positions.push([r, c]);
+                this._shuffle(positions);
+                let holesDug = 0;
+                for (const [r, c] of positions) {
+                    if (holesDug >= holes) break;
+                    const temp = puzzle[r][c];
+                    puzzle[r][c] = 0;
+                    if (this._countSolutions(puzzle.map(row => [...row])) !== 1) {
+                        puzzle[r][c] = temp;
+                    } else {
+                        holesDug++;
+                    }
+                }
+                return puzzle;
+            }
+            _countSolutions(board) {
+                let count = 0;
+                const findEmpty = (b) => {
+                    for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) if (b[r][c] === 0) return [r, c];
+                    return null;
+                };
+                const solve = () => {
+                    const emptySpot = findEmpty(board);
+                    if (!emptySpot) {
+                        count++;
+                        return;
+                    }
+                    const [row, col] = emptySpot;
+                    for (let num = 1; num <= 9; num++) {
+                        if (count > 1) return;
+                        if (this._isValid(board, num, row, col)) {
+                            board[row][col] = num;
+                            solve();
+                            board[row][col] = 0;
+                        }
+                    }
+                };
+                solve();
+                return count;
+            }
+            _isValid(board, num, row, col) {
+                for (let i = 0; i < 9; i++) if (board[row][i] === num || board[i][col] === num) return false;
+                const boxRowStart = Math.floor(row / 3) * 3;
+                const boxColStart = Math.floor(col / 3) * 3;
+                for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) if (board[boxRowStart + r][boxColStart + c] === num) return false;
+                return true;
+            }
+            _shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+        }
+
+        function startNewGame() {
+            const difficulty = difficultySelector.value;
+            newGameBtn.textContent = "生成中...";
+            newGameBtn.disabled = true;
+
+            pencilMarks = Array(9).fill().map(() => Array(9).fill().map(() => new Set()));
+
+            setTimeout(() => {
+                const generator = new SudokuGenerator();
+                const { puzzle, solution } = generator.generate(difficulty);
+                currentPuzzle = puzzle;
+                currentSolution = solution;
+                userBoard = currentPuzzle.map(row => [...row]);
+
+                createGrid();
+                createNumberCounts();
+                updateNumberCounts();
+                resetTimer();
+                startTimer();
+                loadHighScore();
+                difficultyDisplay.textContent = difficultySelector.options[difficultySelector.selectedIndex].text;
+
+                newGameBtn.textContent = "新遊戲";
+                newGameBtn.disabled = false;
+            }, 10);
+        }
+
+        // --- 模組二：UI 渲染與狀態管理 ---
+        function createGrid() {
+            grid.innerHTML = '';
+            for (let r = 0; r < 9; r++) {
+                for (let c = 0; c < 9; c++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+
+                    const cellValue = document.createElement('div');
+                    cellValue.classList.add('cell-value');
+                    cell.appendChild(cellValue);
+
+                    const pencilGrid = document.createElement('div');
+                    pencilGrid.classList.add('pencil-grid');
+                    for (let i = 1; i <= 9; i++) {
+                        const pencilMark = document.createElement('div');
+                        pencilMark.classList.add('pencil-mark');
+                        pencilMark.dataset.mark = i;
+                        pencilGrid.appendChild(pencilMark);
+                    }
+                    cell.appendChild(pencilGrid);
+
+                    if (currentPuzzle[r][c] !== 0) {
+                        cellValue.textContent = currentPuzzle[r][c];
+                        cell.classList.add('given-cell');
+                        cellValue.classList.add('given');
+                    } else {
+                        cell.setAttribute('tabindex', 0);
+                        cell.addEventListener('keydown', handleKeyDown);
+                    }
+                    cell.addEventListener('click', handleCellClick);
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function createNumberCounts() {
+            numberCountsContainer.innerHTML = '';
+            for (let i = 1; i <= 9; i++) {
+                const item = document.createElement('div');
+                item.classList.add('number-count-item');
+                item.dataset.number = i;
+                item.innerHTML = `<div class="number">${i}</div><div class="count" id="count-${i}"></div>`;
+                item.addEventListener('click', () => {
+                    highlightNumber(i);
+                });
+                numberCountsContainer.appendChild(item);
+            }
+        }
+
+        function updateNumberCounts() {
+            const counts = Array(10).fill(0);
+            for (let r = 0; r < 9; r++) {
+                for (let c = 0; c < 9; c++) {
+                    if (userBoard[r][c] !== 0) counts[userBoard[r][c]]++;
+                }
+            }
+            for (let i = 1; i <= 9; i++) {
+                const countEl = document.getElementById(`count-${i}`);
+                const itemEl = countEl.parentElement;
+                const remaining = 9 - counts[i];
+                countEl.textContent = remaining;
+                if (remaining === 0) itemEl.classList.add('completed');
+                else itemEl.classList.remove('completed');
+            }
+        }
+
+        // --- 模組三：使用者互動邏輯 ---
+        function handleCellClick(e) {
+            const clickedCell = e.target.closest('.cell');
+            if (!clickedCell) return;
+
+            if (selectedCell) {
+                selectedCell.classList.remove('selected');
+            }
+            selectedCell = clickedCell;
+            selectedCell.classList.add('selected');
+
+            updateHighlights();
+        }
+
+        function updateHighlights() {
+            for (const cell of grid.children) {
+                cell.classList.remove('highlight-same-number');
+            }
+
+            if (!selectedCell) return;
+
+            const cellValue = selectedCell.querySelector('.cell-value').textContent;
+
+            if (cellValue && cellValue !== '') {
+                for (const cell of grid.children) {
+                    if (cell.querySelector('.cell-value').textContent === cellValue) {
+                        cell.classList.add('highlight-same-number');
+                    }
+                }
+            }
+        }
+
+        function highlightNumber(num) {
+            if (selectedCell) {
+                selectedCell.classList.remove('selected');
+                selectedCell = null;
+            }
+            for (const cell of grid.children) {
+                cell.classList.remove('highlight-same-number');
+                if (cell.querySelector('.cell-value').textContent === String(num)) {
+                    cell.classList.add('highlight-same-number');
+                }
+            }
+        }
+
+        function handleKeyDown(e) {
+            if (!selectedCell || selectedCell.classList.contains('given-cell') || selectedCell.classList.contains('correct-answer')) return;
+
+            const row = parseInt(selectedCell.dataset.row);
+            const col = parseInt(selectedCell.dataset.col);
+            const cellValueDiv = selectedCell.querySelector('.cell-value');
+
+            if (e.key >= '1' && e.key <= '9') {
+                const num = parseInt(e.key, 10);
+                if (isPencilMode) {
+                    if (cellValueDiv.textContent === '') {
+                        togglePencilMark(row, col, num);
+                    }
+                } else {
+                    cellValueDiv.textContent = num;
+                    cellValueDiv.classList.add('user-filled');
+                    userBoard[row][col] = num;
+                    clearPencilMarks(row, col);
+                    validateCell(cellValueDiv, num);
+
+                    if (!cellValueDiv.classList.contains('error')) {
+                        selectedCell.classList.add('correct-answer');
+                        selectedCell.removeEventListener('keydown', handleKeyDown);
+                        selectedCell.removeAttribute('tabindex');
+                    }
+
+                    updateHighlights();
+                    updateNumberCounts();
+                    checkWinCondition();
+                }
+            } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                if (!isPencilMode) {
+                    cellValueDiv.textContent = '';
+                    cellValueDiv.classList.remove('user-filled', 'error');
+                    userBoard[row][col] = 0;
+                    updateHighlights();
+                    updateNumberCounts();
+                }
+            }
+        }
+
+        function togglePencilMode() {
+            isPencilMode = !isPencilMode;
+            pencilToggleBtn.classList.toggle('active', isPencilMode);
+        }
+
+        // --- 模組四：筆記功能相關邏輯 ---
+        function togglePencilMark(row, col, num) {
+            const marks = pencilMarks[row][col];
+            if (marks.has(num)) marks.delete(num);
+            else marks.add(num);
+            renderPencilMarks(row, col);
+        }
+
+        function renderPencilMarks(row, col) {
+            const cell = grid.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
+            const pencilGrid = cell.querySelector('.pencil-grid');
+            const marks = pencilMarks[row][col];
+            for (let i = 1; i <= 9; i++) {
+                const markEl = pencilGrid.querySelector(`.pencil-mark[data-mark='${i}']`);
+                if (marks.has(i)) {
+                    markEl.textContent = i;
+                    markEl.classList.add('visible');
+                } else {
+                    markEl.textContent = '';
+                    markEl.classList.remove('visible');
+                }
+            }
+        }
+
+        function clearPencilMarks(row, col) {
+            pencilMarks[row][col].clear();
+            renderPencilMarks(row, col);
+        }
+
+        // --- 模組五：主題管理 (深色模式) ---
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('sudokuTheme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            themeToggleBtn.innerHTML = isDark ? sunIcon : moonIcon;
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('sudokuTheme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.body.classList.add('dark-mode');
+                updateThemeIcon(true);
+            } else {
+                document.body.classList.remove('dark-mode');
+                updateThemeIcon(false);
+            }
+        }
+
+        // --- 模組六：遊戲核心邏輯與工具函式 ---
+        function validateCell(cellValueDiv, num) {
+            const cell = cellValueDiv.parentElement;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            if (currentSolution[row][col] === num) {
+                cellValueDiv.classList.remove('error', 'user-filled');
+                cellValueDiv.classList.add('given');
+            } else {
+                cellValueDiv.classList.add('error');
+            }
+        }
+
+        function checkWinCondition() {
+            for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) if (userBoard[r][c] !== currentSolution[r][c]) return;
+            stopTimer();
+            setTimeout(() => {
+                alert(`恭喜！您以 ${formatTime(seconds)} 的時間完成了遊戲！`);
+                updateHighScore();
+            }, 100);
+        }
+
+        function startTimer() {
+            stopTimer();
+            timerInterval = setInterval(() => {
+                seconds++;
+                timerDisplay.textContent = `時間: ${formatTime(seconds)}`;
+            }, 1000);
+        }
+        function stopTimer() { clearInterval(timerInterval); }
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            timerDisplay.textContent = '時間: 00:00';
+        }
+        function formatTime(sec) {
+            const minutes = Math.floor(sec / 60);
+            const secondsLeft = sec % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+        }
+        function loadHighScore() {
+            const highScores = JSON.parse(localStorage.getItem('sudokuHighScores')) || {};
+            const difficulty = difficultySelector.value;
+            const score = highScores[difficulty];
+            highScoreDisplay.textContent = score ? formatTime(score) : '--:--';
+        }
+        function updateHighScore() {
+            const highScores = JSON.parse(localStorage.getItem('sudokuHighScores')) || {};
+            const difficulty = difficultySelector.value;
+            const currentBest = highScores[difficulty];
+            if (!currentBest || seconds < currentBest) {
+                highScores[difficulty] = seconds;
+                localStorage.setItem('sudokuHighScores', JSON.stringify(highScores));
+                loadHighScore();
+                alert('新紀錄！');
+            }
+        }
+
+        // --- 事件監聽器 ---
+        newGameBtn.addEventListener('click', startNewGame);
+        difficultySelector.addEventListener('change', startNewGame);
+        pencilToggleBtn.addEventListener('click', togglePencilMode);
+        themeToggleBtn.addEventListener('click', toggleTheme); // 新增
+
+        document.addEventListener('keydown', (e) => {
+            const activeEl = document.activeElement;
+            const isBodyFocused = activeEl === document.body || activeEl === null;
+            const isGridFocused = grid.contains(activeEl);
+
+            if (isBodyFocused && !isGridFocused) {
+                if (e.key >= '1' && e.key <= '9') {
+                    highlightNumber(parseInt(e.key, 10));
+                }
+            }
+        });
+
+        // --- 初始啟動 ---
+        loadTheme(); // 新增
+        startNewGame();
+    });
+
+</script>
 </body>
 
 </html>
