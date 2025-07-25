@@ -1,65 +1,63 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>網頁版數獨 (Sudoku)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>網頁版數獨 (Sudoku)</title>
 </head>
-
 <body>
 
 <header>
-	<h1>數獨 Sudoku</h1>
+    <h1>數獨 Sudoku</h1>
 </header>
 
 <main>
-	<div class="controls-container">
-		<div class="control-group">
-			<button id="theme-toggle-btn" title="切換主題">
-				<!-- 圖示將由 JS 控制 -->
-			</button>
-		</div>
-		<div class="control-group">
-			<label for="difficulty">難度:</label>
-			<select id="difficulty">
-				<option value="easy">簡單</option>
-				<option value="medium" selected>中等</option>
-				<option value="hard">困難</option>
-			</select>
-		</div>
-		<div class="control-group">
-			<button id="pencil-toggle-btn" title="筆記模式">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-					 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-					<path d="m15 5 4 4" />
-				</svg>
-			</button>
-		</div>
-		<div class="control-group">
-			<button id="new-game-btn">新遊戲</button>
-		</div>
-		<div class="control-group">
-			<div id="timer" class="timer">時間: 00:00</div>
-		</div>
-	</div>
+    <div class="controls-container">
+        <div class="control-group">
+            <button id="theme-toggle-btn" title="切換主題">
+                <!-- 圖示將由 JS 控制 -->
+            </button>
+        </div>
+        <div class="control-group">
+            <label for="difficulty">難度:</label>
+            <select id="difficulty">
+                <option value="easy">簡單</option>
+                <option value="medium" selected>中等</option>
+                <option value="hard">困難</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <button id="pencil-toggle-btn" title="筆記模式">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                    <path d="m15 5 4 4"/>
+                </svg>
+            </button>
+        </div>
+        <div class="control-group">
+            <button id="new-game-btn">新遊戲</button>
+        </div>
+        <div class="control-group">
+            <div id="timer" class="timer">時間: 00:00</div>
+        </div>
+    </div>
 
-	<div id="sudoku-grid" class="sudoku-grid">
-		<!-- 遊戲網格將由 JavaScript 動態生成 -->
-	</div>
+    <div id="sudoku-grid" class="sudoku-grid">
+        <!-- 遊戲網格將由 JavaScript 動態生成 -->
+    </div>
 
-	<div id="number-counts" class="number-counts-container">
-		<!-- 數字計數器將由 JavaScript 動態生成 -->
-	</div>
+    <div id="number-counts" class="number-counts-container">
+        <!-- 數字計數器將由 JavaScript 動態生成 -->
+    </div>
 
-	<div class="high-score-container">
-		<h3>最快紀錄 (<span id="current-difficulty-display">中等</span>)</h3>
-		<div id="high-score">--:--</div>
-	</div>
+    <div class="high-score-container">
+        <h3>最快紀錄 (<span id="current-difficulty-display">中等</span>)</h3>
+        <div id="high-score">--:--</div>
+    </div>
 </main>
 <style>
-	/* --- 主題化與 CSS 變數 --- */
+    /* --- 主題化與 CSS 變數 --- */
     :root {
         /* 淺色模式 (預設) */
         --bg-color: #f4f4f4;
@@ -118,7 +116,7 @@
         background-color: var(--main-bg-color);
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         max-width: 500px;
         width: 95%;
         transition: background-color 0.3s;
@@ -145,10 +143,7 @@
         gap: 8px;
     }
 
-    #difficulty,
-    #new-game-btn,
-    #pencil-toggle-btn,
-    #theme-toggle-btn {
+    #difficulty, #new-game-btn, #pencil-toggle-btn, #theme-toggle-btn {
         padding: 8px 12px;
         border: 1px solid var(--border-color);
         border-radius: 4px;
@@ -162,11 +157,12 @@
     }
 
     #new-game-btn {
-        background-color: var(--user-text-color);
-        color: white;
+        background-color: var(--button-bg-color);
+        color: var(--given-text-color);
         font-weight: bold;
         border: none;
         transition: background-color 0.3s;
+        border: 1px solid var(--border-color);
     }
 
     #new-game-btn:disabled {
@@ -174,8 +170,7 @@
         cursor: not-allowed;
     }
 
-    #pencil-toggle-btn.active,
-    #theme-toggle-btn.active {
+    #pencil-toggle-btn.active, #theme-toggle-btn.active {
         background-color: var(--button-active-bg-color);
         border-color: var(--user-text-color);
     }
@@ -208,14 +203,8 @@
         transition: background-color 0.2s;
     }
 
-    .cell:nth-child(3n) {
-        border-right: 2px solid var(--border-thick-color);
-    }
-
-    .cell:nth-child(9n) {
-        border-right: none;
-    }
-
+    .cell:nth-child(3n) { border-right: 2px solid var(--border-thick-color); }
+    .cell:nth-child(9n) { border-right: none; }
     .cell:nth-child(n+19):nth-child(-n+27),
     .cell:nth-child(n+46):nth-child(-n+54) {
         border-bottom: 2px solid var(--border-thick-color);
@@ -266,8 +255,7 @@
         color: var(--error-text-color);
     }
 
-    .given-cell,
-    .correct-answer {
+    .given-cell, .correct-answer {
         background-color: var(--given-cell-bg-color);
         cursor: not-allowed;
     }
@@ -326,9 +314,10 @@
         font-weight: bold;
         color: var(--user-text-color);
     }
+
 </style>
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
 
         // --- DOM 元素 ---
         const grid = document.getElementById('sudoku-grid');
@@ -479,9 +468,11 @@
         // --- 模組二：UI 渲染與狀態管理 ---
         function createGrid() {
             grid.innerHTML = '';
+            const fragment = document.createDocumentFragment(); // 建立文件片段
             for (let r = 0; r < 9; r++) {
                 for (let c = 0; c < 9; c++) {
                     const cell = document.createElement('div');
+
                     cell.classList.add('cell');
                     cell.dataset.row = r;
                     cell.dataset.col = c;
@@ -509,9 +500,10 @@
                         cell.addEventListener('keydown', handleKeyDown);
                     }
                     cell.addEventListener('click', handleCellClick);
-                    grid.appendChild(cell);
+                    fragment.appendChild(cell);
                 }
             }
+            grid.appendChild(fragment);
         }
 
         function createNumberCounts() {
@@ -772,5 +764,4 @@
 
 </script>
 </body>
-
 </html>
